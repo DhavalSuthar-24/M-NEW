@@ -16,10 +16,11 @@ const ProductCard = ({ product, addToCart }) => {
     addToCart(product);
   };
 
-  const croppedTitle = product.title.length > 15 ? product.title.slice(0, 15) + '...' : product.title;
+  // Check if product.title exists before accessing its length
+  const croppedTitle = product.title && product.title.length > 15 ? product.title.slice(0, 15) + '...' : product.title;
 
   return (
-    <div className="max-w-md mx-auto">
+<div className="max-w-md mx-auto">
       <div 
         className="mt-4 relative overflow-hidden bg-white rounded-lg shadow-lg" 
         style={{ width: "250px", height: "400px" }} // Fixed height for consistency
@@ -43,6 +44,11 @@ const ProductCard = ({ product, addToCart }) => {
         </div>
       </div>
     </div>
+
+
+  
+  
+  
   );
 }
 

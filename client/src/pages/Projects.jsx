@@ -1,13 +1,17 @@
 import { FaShoppingCart } from "react-icons/fa";
 import ProductCard from "../Components/ProductCard";
 import Cart from "../Components/Cart";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, updateQuantity, toggleCartVisibility, removeFromCart,clearCart } from '../redux/cart/cartSlice';
 
 const Projects = () => {
-  const [products, setProducts] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
-  const [cartVisible, setCartVisible] = useState(false); // State to control cart visibility
+  const dispatch = useDispatch();
+  const products = useSelector(state => state.cart.products);
+  const cartItems = useSelector(state => state.cart.cartItems);
+  const cartVisible = useSelector(state => state.cart.cartVisible);
+  const [localProducts, setLocalProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,7 +21,7 @@ const Projects = () => {
           throw new Error('Failed to fetch products');
         }
         const data = await res.json();
-        setProducts(data.products);
+        setLocalProducts(data.products); // Set products locally
       } catch (error) {
         console.error(error);
       }
@@ -25,39 +29,21 @@ const Projects = () => {
     fetchProducts();
   }, []);
 
-  const addToCart = (product) => {
-    const existingItemIndex = cartItems.findIndex(item => item._id === product._id);
-    if (existingItemIndex !== -1) {
-      const updatedCartItems = [...cartItems];
-      updatedCartItems[existingItemIndex] = {
-        ...updatedCartItems[existingItemIndex],
-        quantity: updatedCartItems[existingItemIndex].quantity + 1
-      };
-      setCartItems(updatedCartItems);
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+    console.log(product)
   };
 
-  const updateQuantity = (itemId, newQuantity) => {
-    const updatedCartItems = cartItems.map(item => {
-      if (item._id === itemId) {
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
+  const handleUpdateQuantity = (itemId, newQuantity) => {
+    dispatch(updateQuantity({ itemId, newQuantity }));
   };
 
-  const removeFromCart = (itemId) => {
-    setCartItems((prevCartItems) =>
-      prevCartItems.filter((item) => item._id !== itemId)
-    );
+  const handleRemoveFromCart = (itemId) => {
+    dispatch(removeFromCart(itemId));
   };
 
-  const toggleCartVisibility = () => {
-    setCartVisible(!cartVisible);
-    console.log("leo")
+  const handleToggleCartVisibility = () => {
+    dispatch(toggleCartVisibility());
   };
 
   return (
@@ -65,7 +51,7 @@ const Projects = () => {
       <nav className="bg-indigo-600 text-white p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link to="/e-store" className="font-bold text-lg">DKS Blog</Link>
-          <button onClick={toggleCartVisibility} className="relative hover:text-indigo-200 transition duration-200 text-2xl focus:outline-none">
+          <button onClick={handleToggleCartVisibility} className="relative hover:text-indigo-200 transition duration-200 text-2xl focus:outline-none">
             <FaShoppingCart />
             {cartItems.length > 0 && (
               <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full px-2 text-xs">
@@ -79,16 +65,24 @@ const Projects = () => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-indigo-600 mb-8">Our Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              
-                <ProductCard product={product} addToCart={addToCart} />
-             
+            {localProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                addToCart={handleAddToCart}
+              />
             ))}
           </div>
         </div>
       </section>
       {/* Render Cart component with props */}
-      <Cart cartItems={cartItems} updateQuantity={updateQuantity} isVisible={cartVisible} removeFromCart={removeFromCart} toggleVisibility={toggleCartVisibility} />
+      <Cart
+        cartItems={cartItems}
+        updateQuantity={handleUpdateQuantity}
+        isVisible={cartVisible}
+        removeFromCart={handleRemoveFromCart}
+        toggleVisibility={handleToggleCartVisibility}
+      />
     </div>
   );
 }

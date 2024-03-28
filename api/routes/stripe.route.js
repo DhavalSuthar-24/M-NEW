@@ -15,8 +15,9 @@ const defaultCustomerAddress = {
   country: "IN"
 };
 
-router.post("/create-checkout-session", verifyUser, async (req, res) => {
-  const { products } = req.body; // Only products are required
+// Create a checkout session
+router.post("/create-checkout-session", async (req, res) => {
+  const { products } = req.body; // Assuming products is an array of items
 
   try {
     // Create line items for the checkout session
@@ -41,13 +42,11 @@ router.post("/create-checkout-session", verifyUser, async (req, res) => {
       mode: 'payment',
       success_url: 'http://localhost:3000/payment-success',
       cancel_url: 'http://localhost:3000/payment-failed',
-  
       billing_address_collection: 'required', // Prompt Stripe to collect billing address
       shipping_address_collection: {
         allowed_countries: ['IN'], // Allow shipping to India
       },
     });
-    
 
     res.status(200).json({ id: session.id }); // Send the session ID in the response
   } catch (error) {
@@ -55,8 +54,6 @@ router.post("/create-checkout-session", verifyUser, async (req, res) => {
     res.status(500).json({ error: "Failed to create checkout session" });
   }
 });
-
-
 
 // Handle payment success
 router.post("/payment-success", verifyUser, async (req, res) => {

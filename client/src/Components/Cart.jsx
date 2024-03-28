@@ -1,12 +1,23 @@
-import { FaTimes } from 'react-icons/fa'; // Importing close icon from react-icons/fa
+import { FaTimes } from 'react-icons/fa';
 import { loadStripe } from '@stripe/stripe-js';
-import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { addToCart, updateQuantity, removeFromCart } from '../redux/cart/cartSlice';
 
-const Cart = ({ cartItems, updateQuantity, removeFromCart, isVisible, toggleVisibility }) => {
-  // Calculate total amount
-  const totalAmount = cartItems.reduce((total, item) => {
-    return total + (item.price * (item.quantity || 0));
-  }, 0);
+const Cart = ({ isVisible, toggleVisibility }) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    const calculateTotal = () => {
+      const total = cartItems.reduce((total, item) => {
+        return total + (item.price * (item.quantity || 0));
+      }, 0);
+      setTotalAmount(total);
+    };
+    calculateTotal();
+  }, [cartItems]);
 
   const makePayment = async () => {
     const stripe = await loadStripe('pk_test_51OySR3SH9ySesKUUIvonoDQvGUBaP67vQjXrPdfTulRuObuqvoUk0TCooKCI7jOyFOGRmWQXL4poJucjbqk8k33v00WVPocAY2');
@@ -41,8 +52,15 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, isVisible, toggleVisi
       }
     } catch (error) {
       console.error("Error creating checkout session:", error);
-      // Handle error, display message to user, etc.
     }
+  };
+
+  const handleUpdateQuantity = (itemId, newQuantity) => {
+    dispatch(updateQuantity({ itemId, newQuantity }));
+  };
+
+  const handleRemoveFromCart = (itemId) => {
+    dispatch(removeFromCart(itemId));
   };
 
   return isVisible ? (
@@ -67,20 +85,20 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, isVisible, toggleVisi
               <div className="flex items-center mt-2">
                 <button
                   className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full mr-2 hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => updateQuantity(item._id, Math.max(1, (item.quantity || 1) - 1))}
+                  onClick={() => handleUpdateQuantity(item._id, Math.max(1, (item.quantity || 1) - 1))}
                 >
                   -
                 </button>
                 <span className="px-3 py-1 border">{item.quantity || 0}</span>
                 <button
                   className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full ml-2 hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => updateQuantity(item._id, (item.quantity || 0) + 1)}
+                  onClick={() => handleUpdateQuantity(item._id, (item.quantity || 0) + 1)}
                 >
                   +
                 </button>
                 <button
                   className="bg-red-500 text-white px-3 py-1 rounded-full ml-auto hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  onClick={() => removeFromCart(item._id)}
+                  onClick={() => handleRemoveFromCart(item._id)}
                 >
                   Remove
                 </button>
@@ -92,7 +110,6 @@ const Cart = ({ cartItems, updateQuantity, removeFromCart, isVisible, toggleVisi
           <div>
             <span className='text-black'>Total: </span> ₹{totalAmount.toFixed(2)}
           </div>
-          {/* Checkout Button */}
           <button onClick={makePayment} className='bg-blue-500 p-2 border rounded-full hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'>Checkout</button>
         </div>
       </div>
