@@ -153,9 +153,14 @@ const ProductView = () => {
 
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center">
-      <div className="w-full md:w-1/2 p-4 flex justify-center">
-        <img src={selectedImage} alt={product.title} className="w-full md:w-64 rounded-lg shadow-md hover:scale-105 transition duration-300" />
-      </div>
+     <div className="w-full md:w-1/2 p-4 flex justify-center items-center h-full">
+  <img 
+    src={selectedImage} 
+    alt={product.title} 
+    className="w-full h-full object-cover rounded-lg shadow-md hover:scale-105 transition duration-300" 
+    style={{ maxHeight: "100%", maxWidth: "100%" }} // Ensure the image fills its container while maintaining its aspect ratio
+  />
+</div>
       <div className="w-full md:w-1/2 p-4">
         <div className="flex mb-4">
           <img
@@ -198,7 +203,7 @@ const ProductView = () => {
     )}
     &nbsp; &nbsp;
     <br />
-    <span className="font-bold">New Price: ${discountedPrice}</span>
+    <span >New Price: <span className="font-bold" >  ₹{discountedPrice}</span></span>
   </span>
 ) : (
   <span>${product.price}</span>

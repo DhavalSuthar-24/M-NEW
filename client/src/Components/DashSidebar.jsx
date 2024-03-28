@@ -6,6 +6,7 @@ import { signOutSuccess } from "../redux/user/user.slice";
 import {  useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { LuFileBarChart } from "react-icons/lu";
+import {GiTicket} from 'react-icons/gi'
 function DashSidebar() {
     const location = useLocation();
     const {currentUser} = useSelector((state)=>state.user)
@@ -78,7 +79,7 @@ function DashSidebar() {
                   {
                       currentUser.isAdmin &&(
                          <Link to='/dashboard/?tab=coupon'>
-                           <Sidebar.Item active={tab==="coupon"} icon={LuFileBarChart}  labelColor="dark" as='div'  as='div'>Coupon</Sidebar.Item>
+                           <Sidebar.Item active={tab==="coupon"} icon={GiTicket}  labelColor="dark" as='div'  as='div'>Coupon</Sidebar.Item>
                   </Link> ) }
                    
                     <Sidebar.Item onClick={handleSignout} className="cursor-pointer"  icon={ HiArrowSmRight}   >

@@ -9,7 +9,7 @@ export const addProduct = async (req, res, next) => {
         }
 
         // Check if all required fields are provided
-        const { title, content, image,image1,image2,price } = req.body;
+        const { title, content, image,image1,image2,category,price } = req.body;
         if (!title || !content || !image) {
             return next(errorHandler(400, "All fields are required"));
         }
@@ -26,6 +26,7 @@ export const addProduct = async (req, res, next) => {
             image2,
             slug,
             price,
+            category,
             userId: req.user._id // Assuming userId is provided in the request body or session
         });
 

@@ -7,6 +7,7 @@ const CouponGenerator = () => {
   const [discountValue, setDiscountValue] = useState(0); // Default discount value
   const [generatedCoupon, setGeneratedCoupon] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
   const handleCouponSave = async () => {
     try {
       const response = await fetch('/api/coupon/save', {
@@ -30,7 +31,7 @@ const CouponGenerator = () => {
       // Handle error scenarios here
     }
   };
-  // Event handler for changing the coupon length
+
   const handleCouponLengthChange = (e) => {
     const value = parseInt(e.target.value);
     if (value >= 8) {
@@ -41,17 +42,14 @@ const CouponGenerator = () => {
     }
   };
 
-  // Event handler for changing the text pattern
   const handleTextPatternChange = (e) => {
     setTextPattern(e.target.value);
   };
 
-  // Event handler for changing the discount type
   const handleDiscountTypeChange = (e) => {
     setDiscountType(e.target.value);
   };
 
-  // Event handler for changing the discount value
   const handleDiscountValueChange = (e) => {
     const value = parseFloat(e.target.value);
     if (!isNaN(value)) {
@@ -59,37 +57,30 @@ const CouponGenerator = () => {
     }
   };
 
-  // Function to generate a random coupon based on the specified coupon length, text pattern, and discount
   const generateCoupon = () => {
-    // Generate a random string of alphanumeric characters of the specified length
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let coupon = '';
 
-    // Adjusting coupon length considering the pattern
-    const adjustedLength = couponLength - textPattern.length;
-    if (adjustedLength <= 0) {
-      setErrorMessage('Coupon length must be greater than the length of the pattern.');
-      return;
-    }
+    // Adjust the effective coupon length considering the text pattern
+    const effectiveCouponLength = couponLength + textPattern.length;
 
     // Generate random characters for the coupon
-    for (let i = 0; i < adjustedLength; i++) {
+    for (let i = 0; i < effectiveCouponLength; i++) {
       coupon += characters.charAt(Math.floor(Math.random() * characters.length));
     }
 
     // Insert the text pattern at a random position in the coupon
     if (textPattern) {
-      const randomPosition = Math.floor(Math.random() * coupon.length);
+      const randomPosition = Math.floor(Math.random() * (coupon.length + 1));
       coupon = coupon.slice(0, randomPosition) + textPattern + coupon.slice(randomPosition);
     }
 
     // Apply the discount based on the selected discount type
     if (discountType === 'percentage') {
-      const discountedPrice = coupon.length - Math.ceil((discountValue / 100) * coupon.length);
-      coupon = coupon.slice(0, discountedPrice);
+      const discountAmount = Math.floor((discountValue / 100) * coupon.length);
+      coupon = coupon.slice(0, -discountAmount);
     } else {
-      const discountedPrice = coupon.length - discountValue;
-      coupon = coupon.slice(0, discountedPrice);
+      coupon = coupon.slice(0, -discountValue);
     }
 
     // Set the generated coupon
@@ -107,7 +98,7 @@ const CouponGenerator = () => {
           id="couponLength"
           value={couponLength}
           onChange={handleCouponLengthChange}
-          min={8} // Set the minimum value to 8
+          min={8}
           className="border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         {errorMessage && (
@@ -155,7 +146,7 @@ const CouponGenerator = () => {
           id="discountValue"
           value={discountValue}
           onChange={handleDiscountValueChange}
-          min={0} // Set the minimum value to 0
+          min={0}
           className="border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>

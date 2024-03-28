@@ -23,13 +23,14 @@ const userSchema = new mongoose.Schema({
     isAdmin:{
         type:Boolean,
         default:false
-
-    }
-
+    },
+    orders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order'
+    }]
 },{
     timestamps:true
 })
-
 
 const User = mongoose.model("User",userSchema)
 
