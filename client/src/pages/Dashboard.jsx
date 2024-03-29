@@ -7,6 +7,8 @@ import DashUsers from "../Components/DashUsers";
 import DashComments from "../Components/DashComments";
 import DashboardComp from "../Components/DashboardComp";
 import CouponGenerator from "../Components/CouponGenerator";
+
+import Charts from "../Components/Charts";
 const Dashboard = () => {
   const location = useLocation();
 const[tab,settab] =useState('')
@@ -43,6 +45,9 @@ if(tabFromUrl){
 }
 {
   tab==='coupon' && <CouponGenerator/>
+}
+{
+  tab === 'chart' && <Charts/>
 }
     </div>
   )

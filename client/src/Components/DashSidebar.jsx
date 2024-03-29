@@ -1,5 +1,6 @@
 import { Sidebar } from "flowbite-react"
 import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiAnnotation, HiDocumentSearch } from 'react-icons/hi';
+import { FaChartLine } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { useState,useEffect } from "react";
 import { signOutSuccess } from "../redux/user/user.slice";
@@ -61,7 +62,7 @@ function DashSidebar() {
                     {
                       currentUser.isAdmin &&(
                          <Link to='/dashboard/?tab=users'>
-                    <Sidebar.Item active={tab==="posts"} icon={HiOutlineUserGroup }  labelColor="dark" as='div'  as='div'>
+                    <Sidebar.Item active={tab==="users"} icon={HiOutlineUserGroup }  labelColor="dark" as='div'  as='div'>
                     Users
                     </Sidebar.Item></Link>
                       )
@@ -80,6 +81,11 @@ function DashSidebar() {
                       currentUser.isAdmin &&(
                          <Link to='/dashboard/?tab=coupon'>
                            <Sidebar.Item active={tab==="coupon"} icon={GiTicket}  labelColor="dark" as='div'  as='div'>Coupon</Sidebar.Item>
+                  </Link> ) }
+                  {
+                      currentUser.isAdmin &&(
+                         <Link to='/dashboard/?tab=chart'>
+                           <Sidebar.Item active={tab==="chart"} icon={FaChartLine}  labelColor="dark" as='div'  as='div'>Chart</Sidebar.Item>
                   </Link> ) }
                    
                     <Sidebar.Item onClick={handleSignout} className="cursor-pointer"  icon={ HiArrowSmRight}   >
