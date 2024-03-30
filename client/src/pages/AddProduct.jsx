@@ -9,11 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
-    title: '',
-    category: 'uncategorized',
-    quantity: 0,
-    price: 0,
-    content: '',
+
   });
   const [imageUploadProgress, setImageUploadProgress] = useState({});
   const [imageUploadError, setImageUploadError] = useState({});

@@ -1,40 +1,58 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 
 const Charts = () => {
   const chartRef = useRef(null);
+  const [productData, setProductData] = useState([]);
 
   useEffect(() => {
-    const data = [
-      { year: 2010, count: 10 },
-      { year: 2011, count: 20 },
-      { year: 2012, count: 15 },
-      { year: 2013, count: 25 },
-      { year: 2014, count: 22 },
-      { year: 2015, count: 30 },
-      { year: 2016, count: 28 },
-    ];
-
-    const chartData = {
-      labels: data.map(row => row.year),
-      datasets: [
-        {
-          label: 'Acquisitions by year',
-          data: data.map(row => row.count),
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
+    const fetchProductData = async () => {
+      try {
+        const res = await fetch('/api/product/getProducts');
+        if (!res.ok) {
+          throw new Error('Failed to fetch products');
         }
-      ]
+        const data = await res.json();
+        // Extract quantity and title from the fetched products
+        const productChartData = data.products.map(product => ({
+          title: product.title,
+          quantity: product.quantity
+        }));
+        setProductData(productChartData);
+      } catch (error) {
+        console.error(error);
+      }
     };
-
-    const ctx = chartRef.current.getContext('2d');
-
-    new Chart(ctx, {
-      type: 'bar',
-      data: chartData
-    });
+    
+    fetchProductData();
   }, []);
+
+  useEffect(() => {
+    if (chartRef.current && productData.length > 0) {
+      const chartLabels = productData.map(product => product.title);
+      const chartValues = productData.map(product => product.quantity);
+      
+      const chartData = {
+        labels: chartLabels,
+        datasets: [
+          {
+            label: 'Product Quantity',
+            data: chartValues,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }
+        ]
+      };
+
+      const ctx = chartRef.current.getContext('2d');
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: chartData
+      });
+    }
+  }, [productData]);
 
   return (
     <div style={{ width: '1000px', height: '666px' }} className='flex justify-center items-start'>

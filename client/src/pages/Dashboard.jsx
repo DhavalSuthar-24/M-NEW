@@ -9,6 +9,7 @@ import DashboardComp from "../Components/DashboardComp";
 import CouponGenerator from "../Components/CouponGenerator";
 
 import Charts from "../Components/Charts";
+import PieChart from "../Components/PieChart";
 const Dashboard = () => {
   const location = useLocation();
 const[tab,settab] =useState('')
@@ -48,6 +49,9 @@ if(tabFromUrl){
 }
 {
   tab === 'chart' && <Charts/>
+}
+{
+  tab ==="pie" && <PieChart/>
 }
     </div>
   )

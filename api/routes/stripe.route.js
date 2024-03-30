@@ -21,19 +21,17 @@ router.post("/create-checkout-session", async (req, res) => {
 
   try {
     // Create line items for the checkout session
-    const lineItems = products.map(product => {
-      return {
-        price_data: {
-          currency: 'inr',
-          product_data: {
-            name: product.title,
-            images: [product.image],
-          },
-          unit_amount: product.price * 100, // Amount in cents
+    const lineItems = products.map(product => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: product.title,
+          images: [product.image],
         },
-        quantity: product.quantity,
-      };
-    });
+        unit_amount: product.price * 100, // Amount in cents
+      },
+      quantity: product.quantity,
+    }));
 
     // Create a checkout session
     const session = await stripe.checkout.sessions.create({
@@ -43,9 +41,9 @@ router.post("/create-checkout-session", async (req, res) => {
       success_url: 'http://localhost:3000/payment-success',
       cancel_url: 'http://localhost:3000/payment-failed',
       billing_address_collection: 'required', // Prompt Stripe to collect billing address
-      shipping_address_collection: {
-        allowed_countries: ['IN'], // Allow shipping to India
-      },
+      // shipping_address_collection: {
+      //   allowed_countries: [''], // Allow shipping to India
+      // },
     });
 
     res.status(200).json({ id: session.id }); // Send the session ID in the response
@@ -54,6 +52,7 @@ router.post("/create-checkout-session", async (req, res) => {
     res.status(500).json({ error: "Failed to create checkout session" });
   }
 });
+
 
 // Handle payment success
 router.post("/payment-success", verifyUser, async (req, res) => {

@@ -9,7 +9,7 @@ export const addProduct = async (req, res, next) => {
         }
 
         // Check if all required fields are provided
-        const { title, content, image,image1,image2,category,price } = req.body;
+        const { title, content, image,image1,image2,category,price,quantity } = req.body;
         if (!title || !content || !image) {
             return next(errorHandler(400, "All fields are required"));
         }
@@ -26,6 +26,7 @@ export const addProduct = async (req, res, next) => {
             image2,
             slug,
             price,
+            quantity,
             category,
             userId: req.user._id // Assuming userId is provided in the request body or session
         });
@@ -46,34 +47,56 @@ export const getProducts = async (req, res, next) => {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 9;
         const sortDirection = req.query.order === 'asc' ? 1 : -1;
-        const products = await Product.find({
-            ...(req.query.userId && { userId: req.query.userId }),
-            ...(req.query.category && { category: req.query.category }),
-            ...(req.query.slug && { slug: req.query.slug }),
-            ...(req.query.productId && { _id: req.query.productId }),
-            ...(req.query.searchTerm && {
-                $or: [
-                    { title: { $regex: req.query.searchTerm, $options: 'i' } },
-                    { content: { $regex: req.query.searchTerm, $options: 'i' } },
-                ],
-            }),
-        })
+        
+        // Aggregate pipeline to group products by category and calculate the count
+        const pipeline = [
+            {
+                $match: {
+                    ...(req.query.userId && { userId: req.query.userId }),
+                    ...(req.query.category && { category: req.query.category }),
+                    ...(req.query.slug && { slug: req.query.slug }),
+                    ...(req.query.productId && { _id: req.query.productId }),
+                    ...(req.query.searchTerm && {
+                        $or: [
+                            { title: { $regex: req.query.searchTerm, $options: 'i' } },
+                            { content: { $regex: req.query.searchTerm, $options: 'i' } },
+                        ],
+                    }),
+                },
+            },
+            {
+                $group: {
+                    _id: '$category', // Group by category
+                    count: { $sum: 1 }, // Count the number of products in each category
+                },
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude _id field from the output
+                    category: '$_id', // Rename _id field to category
+                    count: 1, // Include count field
+                },
+            },
+        ];
+
+        const categoriesWithCounts = await Product.aggregate(pipeline);
+        const products = await Product.find({})
             .sort({ updatedAt: sortDirection })
             .skip(startIndex)
             .limit(limit);
 
         const totalProducts = await Product.countDocuments();
 
-        // You can include additional logic specific to products if needed
-
         res.status(200).json({
             products,
             totalProducts,
+            categories: categoriesWithCounts,
         });
     } catch (error) {
         next(error);
     }
-}
+};
+
 
 export const getProduct = async(req,res,next)=>{
     try {

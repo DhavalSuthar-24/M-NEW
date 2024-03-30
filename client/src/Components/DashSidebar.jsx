@@ -8,6 +8,7 @@ import {  useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { LuFileBarChart } from "react-icons/lu";
 import {GiTicket} from 'react-icons/gi'
+import { FaChartPie } from "react-icons/fa";
 function DashSidebar() {
     const location = useLocation();
     const {currentUser} = useSelector((state)=>state.user)
@@ -86,6 +87,11 @@ function DashSidebar() {
                       currentUser.isAdmin &&(
                          <Link to='/dashboard/?tab=chart'>
                            <Sidebar.Item active={tab==="chart"} icon={FaChartLine}  labelColor="dark" as='div'  as='div'>Chart</Sidebar.Item>
+                  </Link> ) }
+                  {
+                      currentUser.isAdmin &&(
+                         <Link to='/dashboard/?tab=pie'>
+                           <Sidebar.Item active={tab==="pie"} icon={FaChartPie}  labelColor="dark" as='div'  as='div'>Pie</Sidebar.Item>
                   </Link> ) }
                    
                     <Sidebar.Item onClick={handleSignout} className="cursor-pointer"  icon={ HiArrowSmRight}   >
