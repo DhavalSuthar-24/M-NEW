@@ -4,11 +4,15 @@ import Chart from 'chart.js/auto';
 const Charts = () => {
   const chartRef = useRef(null);
   const [productData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchProductData = async () => {
+      setLoading(true);
       try {
-        const res = await fetch('/api/product/getProducts');
+        const res = await fetch(`/api/product/getProducts?page=${page}&limit=9`);
         if (!res.ok) {
           throw new Error('Failed to fetch products');
         }
@@ -18,14 +22,16 @@ const Charts = () => {
           title: product.title,
           quantity: product.quantity
         }));
-        setProductData(productChartData);
+        setProductData(prevData => [...prevData, ...productChartData]);
       } catch (error) {
-        console.error(error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
     
     fetchProductData();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     if (chartRef.current && productData.length > 0) {
@@ -54,9 +60,24 @@ const Charts = () => {
     }
   }, [productData]);
 
+  const handleShowMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
   return (
-    <div style={{ width: '1000px', height: '666px' }} className='flex justify-center items-start'>
-      <canvas ref={chartRef} />
+    <div>
+      <div style={{ width: '1000px', height: '666px' }} className='flex justify-center items-start'>
+        <canvas ref={chartRef} />
+      </div>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      {productData.length > 9 && (
+        <div className="flex justify-center mt-4">
+          <button onClick={handleShowMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Show More
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -44,48 +44,57 @@ export const addProduct = async (req, res, next) => {
 
 export const getProducts = async (req, res, next) => {
     try {
-        const startIndex = parseInt(req.query.startIndex) || 0;
+        const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 9;
         const sortDirection = req.query.order === 'asc' ? 1 : -1;
         
-        // Aggregate pipeline to group products by category and calculate the count
-        const pipeline = [
-            {
-                $match: {
-                    ...(req.query.userId && { userId: req.query.userId }),
-                    ...(req.query.category && { category: req.query.category }),
-                    ...(req.query.slug && { slug: req.query.slug }),
-                    ...(req.query.productId && { _id: req.query.productId }),
-                    ...(req.query.searchTerm && {
-                        $or: [
-                            { title: { $regex: req.query.searchTerm, $options: 'i' } },
-                            { content: { $regex: req.query.searchTerm, $options: 'i' } },
-                        ],
-                    }),
-                },
-            },
-            {
-                $group: {
-                    _id: '$category', // Group by category
-                    count: { $sum: 1 }, // Count the number of products in each category
-                },
-            },
-            {
-                $project: {
-                    _id: 0, // Exclude _id field from the output
-                    category: '$_id', // Rename _id field to category
-                    count: 1, // Include count field
-                },
-            },
-        ];
+        // Calculate the startIndex based on the requested page
+        const startIndex = (page - 1) * limit;
 
-        const categoriesWithCounts = await Product.aggregate(pipeline);
-        const products = await Product.find({})
+        // Construct the query to fetch products for the requested page
+        const query = {
+            ...(req.query.userId && { userId: req.query.userId }),
+            ...(req.query.category && { category: req.query.category }),
+            ...(req.query.slug && { slug: req.query.slug }),
+            ...(req.query.productId && { _id: req.query.productId }),
+            ...(req.query.searchTerm && {
+                $or: [
+                    { title: { $regex: req.query.searchTerm, $options: 'i' } },
+                    { content: { $regex: req.query.searchTerm, $options: 'i' } },
+                ],
+            }),
+        };
+
+        // Fetch products for the requested page
+        const products = await Product.find(query)
             .sort({ updatedAt: sortDirection })
             .skip(startIndex)
             .limit(limit);
 
-        const totalProducts = await Product.countDocuments();
+        // Fetch total number of products for pagination
+        const totalProducts = await Product.countDocuments(query);
+
+        // Fetch aggregated category counts
+        const pipeline = [
+            {
+                $match: query // Use the same query for categories aggregation
+            },
+            {
+                $group: {
+                    _id: '$category',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    category: '$_id',
+                    count: 1
+                }
+            }
+        ];
+
+        const categoriesWithCounts = await Product.aggregate(pipeline);
 
         res.status(200).json({
             products,
@@ -96,6 +105,7 @@ export const getProducts = async (req, res, next) => {
         next(error);
     }
 };
+
 
 
 export const getProduct = async(req,res,next)=>{

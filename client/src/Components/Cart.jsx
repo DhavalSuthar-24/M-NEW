@@ -2,12 +2,15 @@ import { FaTimes } from 'react-icons/fa';
 import { loadStripe } from '@stripe/stripe-js';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { addToCart, updateQuantity, removeFromCart } from '../redux/cart/cartSlice';
+import {  updateQuantity, removeFromCart } from '../redux/cart/cartSlice';
+import { Link } from 'react-router-dom';
 
 const Cart = ({ isVisible, toggleVisibility }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const [totalAmount, setTotalAmount] = useState(0);
+  const { currentUser } = useSelector((state) => state.user);
+
 
   useEffect(() => {
     const calculateTotal = () => {
@@ -17,6 +20,7 @@ const Cart = ({ isVisible, toggleVisibility }) => {
       setTotalAmount(total);
     };
     calculateTotal();
+
   }, [cartItems]);
 
   const makePayment = async () => {
@@ -24,8 +28,11 @@ const Cart = ({ isVisible, toggleVisibility }) => {
 
     try {
       const body = {
-        products: cartItems
+        products: cartItems, // Array of products in the cart
+        userId:currentUser._id, // User ID of the current user
+        username:currentUser.username, // Username of the current user
       };
+      
 
       const headers = {
         'Content-Type': 'application/json'
@@ -107,14 +114,25 @@ const Cart = ({ isVisible, toggleVisibility }) => {
           </div>
         ))}
         <div className="mt-4 text-green-400 font-semibold text-xl flex justify-between">
-          <div>
+          <div className='text-center'>
             <span className='text-black'>Total: </span> ₹{totalAmount.toFixed(2)}
           </div>
-          <button onClick={makePayment} className='bg-blue-500 p-2 border rounded-full hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'>Checkout</button>
+          {currentUser ? (
+            // Render the "Checkout" button for authenticated users
+            <button onClick={makePayment} className='bg-blue-500 p-2 border rounded-full hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'>
+              Checkout
+            </button>
+          ) : (
+            // Render the link for non-authenticated users
+            <Link to="/sign-in" className="ml-3 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300">
+              Login to Checkout
+            </Link>
+          )}
         </div>
       </div>
     </div>
   ) : null;
-};
-
+          }
 export default Cart;
+
+  

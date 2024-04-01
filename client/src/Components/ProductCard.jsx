@@ -22,7 +22,7 @@ const ProductCard = ({ product, addToCart }) => {
   return (
 <div className="max-w-md mx-auto">
       <div 
-        className="mt-4 relative overflow-hidden bg-white rounded-lg shadow-lg" 
+        className="mt-4 relative overflow-hidden bg-white text-gray-900 rounded-lg shadow-lg" 
         style={{ width: "250px", height: "400px" }} // Fixed height for consistency
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
