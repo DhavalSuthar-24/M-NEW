@@ -1,5 +1,6 @@
 import { Sidebar } from "flowbite-react"
 import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiAnnotation, HiDocumentSearch } from 'react-icons/hi';
+import { FaShoppingBag } from "react-icons/fa";
 import { FaChartLine } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { useState,useEffect } from "react";
@@ -78,6 +79,13 @@ function DashSidebar() {
                          <Link to='/dashboard/?tab=dash'>
                            <Sidebar.Item active={tab==="dash"} icon={LuFileBarChart}  labelColor="dark" as='div'  as='div'>Dashboard</Sidebar.Item>
                   </Link> ) }
+
+                  {
+                      currentUser.isAdmin &&(
+                         <Link to='/dashboard/?tab=products'>
+                           <Sidebar.Item active={tab==="products"} icon={FaShoppingBag}  labelColor="dark" as='div'  as='div'>Products</Sidebar.Item>
+                  </Link> ) }
+
                   {
                       currentUser.isAdmin &&(
                          <Link to='/dashboard/?tab=coupon'>

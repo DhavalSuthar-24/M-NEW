@@ -10,6 +10,7 @@ import CouponGenerator from "../Components/CouponGenerator";
 
 import Charts from "../Components/Charts";
 import PieChart from "../Components/PieChart";
+import DashProducts from "../Components/DashProducts";
 const Dashboard = () => {
   const location = useLocation();
 const[tab,settab] =useState('')
@@ -52,6 +53,9 @@ if(tabFromUrl){
 }
 {
   tab ==="pie" && <PieChart/>
+}
+{
+  tab==='products'  && <DashProducts/>
 }
     </div>
   )

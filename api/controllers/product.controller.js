@@ -42,6 +42,8 @@ export const addProduct = async (req, res, next) => {
     }
 };
 
+
+
 export const getProducts = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -65,11 +67,11 @@ export const getProducts = async (req, res, next) => {
             }),
         };
 
-        // Fetch products for the requested page
+        // Fetch products for the requested page with pagination
         const products = await Product.find(query)
             .sort({ updatedAt: sortDirection })
-            .skip(startIndex)
-            .limit(limit);
+            .skip(startIndex) // Skip documents based on startIndex
+            .limit(limit); // Limit the number of documents returned
 
         // Fetch total number of products for pagination
         const totalProducts = await Product.countDocuments(query);
@@ -102,9 +104,11 @@ export const getProducts = async (req, res, next) => {
             categories: categoriesWithCounts,
         });
     } catch (error) {
-        next(error);
+        next(error); // Pass the error to the error handling middleware
     }
 };
+
+
 
 
 

@@ -24,6 +24,7 @@ import ScrollToTop from './Components/ScrollToTop';
 import AddProduct from './pages/AddProduct';
 import Cart from './Components/Cart';
 import ProductView from './Components/ProductView';
+import UpdateProduct from './pages/updateProduct';
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/update-post/:postId' element={<UpdatePost />} />
           <Route path='/add-product' element={<AddProduct />} />
+          <Route path='/update-product/:productId' element={<UpdateProduct />} />
         </Route>
 
         <Route path='/e-store' element={<Projects />} />

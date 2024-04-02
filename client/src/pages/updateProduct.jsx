@@ -1,20 +1,40 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const AddProduct = () => {
-  const [formData, setFormData] = useState({
+const UpdateProduct = () => {
+  const [formData, setFormData] = useState({ title: '', category: '', quantity: 1, price: 1, content: '' });
 
-  });
   const [imageUploadProgress, setImageUploadProgress] = useState({});
   const [imageUploadError, setImageUploadError] = useState({});
   const [publishError, setPublishError] = useState(null);
   const navigate = useNavigate();
+  const { productId } = useParams();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/product/getproduct/${productId}`);
+        const data = await res.json();
+        if (!res.ok) {
+          setPublishError(data.message);
+          return;
+        }
+        setPublishError(null);
+        setFormData(data.product);
+      } catch (error) {
+        console.log(error.message);
+        setPublishError('Something went wrong');
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   const handleUploadImage = async (index, file) => {
     try {
@@ -59,8 +79,8 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/product/add', {
-        method: 'POST',
+      const res = await fetch(`/api/product/updateProduct/${productId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -72,10 +92,8 @@ const AddProduct = () => {
         return;
       }
 
-      if (res.ok) {
-        setPublishError(null);
-        navigate(`/product/${data._id}`);
-      }
+      setPublishError(null);
+      navigate(`/product/${productId}`);
     } catch (error) {
       setPublishError('Something went wrong');
     }
@@ -83,17 +101,20 @@ const AddProduct = () => {
 
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
-      <h1 className='text-center text-3xl my-7 font-semibold'>Add Product</h1>
+      <h1 className='text-center text-3xl my-7 font-semibold'>Update Product</h1>
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <TextInput
           type='text'
           placeholder='Title'
           required
           id='title'
-          value={formData.title}
+          value={formData.title || ''}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
         />
-        <Select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+        <Select
+          value={formData.category || 'uncategorized'}
+          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+        >
           <option value='uncategorized'>Select a category</option>
           <option value='mobile'>Mobile And Laptop</option>
           <option value='clothes'>Clothes</option>
@@ -105,7 +126,7 @@ const AddProduct = () => {
           placeholder='Add quantity'
           required
           id='quantity'
-          value={formData.quantity}
+          value={formData.quantity || ''}
           onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
         />
         <TextInput
@@ -113,7 +134,7 @@ const AddProduct = () => {
           placeholder='Add Price'
           required
           id='price'
-          value={formData.price}
+          value={formData.price || ''}
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
         />
 
@@ -208,11 +229,11 @@ const AddProduct = () => {
           placeholder='Write something...'
           className='h-36 mb-12'
           required
-          value={formData.content}
+          value={formData.content || ''}
           onChange={(e) => setFormData({ ...formData, content: e.target.value })}
         />
         <Button type='submit' gradientDuoTone='purpleToPink'>
-          Publish
+          Update Product
         </Button>
         {publishError && <Alert className='mt-5' color='failure'>{publishError}</Alert>}
       </form>
@@ -220,4 +241,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;

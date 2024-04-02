@@ -1,37 +1,30 @@
 import express from "express";
-import mongoose from 'mongoose';
 import Stripe from "stripe";
-import { Order } from "../models/order.model.js"; // Import the Order model
+import { Order } from "../models/order.model.js"; 
 import { Product } from "../models/product.model.js";
 
 const router = express.Router();
 const stripe = new Stripe('sk_test_51OySR3SH9ySesKUUn99kqLkKB5FFsLGufFhCl9ZjHbThbDjFrSwLt6y4hjqk6rQ8eM4wVMk45RcObiCf2qiRRTdZ00qQic1COz');
 
-// Connect to MongoDB
-
-
-// Create a checkout session
 router.post("/create-checkout-session", async (req, res) => {
   const { products, userId, username } = req.body;
   const customer = await stripe.customers.create({
     metadata: {
-      userId:userId,
-      cart: JSON.stringify(products),
-    },
+      userId: userId,
+      cart: JSON.stringify(products.map(product => ({ productId: product._id, quantity: product.quantity }))),
+    }
+    ,
   });
 
   try {
-
-
     const lineItems = products.map(product => ({
       price_data: {
         currency: 'usd',
         product_data: {
           name: product.title,
           images: [product.image],
-          metadata:{
+          metadata: {
             id: product._id
-
           }
         },
         unit_amount: product.price * 100,
@@ -88,97 +81,52 @@ router.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-// Handle payment success
-router.post("/payment-success", async (req, res) => {
-  try {
-    const { payment_intent, metadata } = req.body;
-    const { userId, username, products } = metadata;
-    const parsedProducts = JSON.parse(products);
+const endpointSecret = "whsec_b7193d8be75282424d9dc46ab21ad1f5c7b9fb834eed50c7c651ff152a40dc95";
 
-    const newOrder = new Order({
-      userId: userId,
-      username: username,
-      products: parsedProducts.map(product => ({
-        productId: product.id, // Adjust according to your model schema
-        quantity: product.quantity,
-      })),
-      paymentIntent: payment_intent,
-      payment_status: 'completed',
-    });
-
-    await newOrder.save();
-
-    for (const product of parsedProducts) {
-      const existingProduct = await Product.findById(product.id);
-
-      if (!existingProduct) {
-        throw new Error(`Product with ID ${product.id} not found`);
-      }
-
-      existingProduct.quantity -= product.quantity;
-      await existingProduct.save();
-    }
-
-    res.status(200).json({ message: 'Order placed successfully' });
-  } catch (error) {
-    console.error('Error processing payment:', error);
-    res.status(500).json({ error: 'Failed to place order' });
-  }
-});
-
-// Stripe webhook
-// Stripe webhook
-router.post("/webhook", async (req, res) => {
-  const sig = req.headers["stripe-signature"];
-  const endpointSecret = "whsec_b7193d8be75282424d9dc46ab21ad1f5c7b9fb834eed50c7c651ff152a40dc95"; // Replace with your webhook secret
+router.post('/webhook', express.raw({type: 'application/json'}), async (request, response) => {
+  const sig = request.headers['stripe-signature'];
 
   let event;
 
   try {
-    const rawBody = req.rawBody; // Assuming you have middleware to populate req.rawBody
-
-    event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
-    console.error("Webhook signature verification failed:", err.message);
-    return res.sendStatus(400);
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
   }
 
   // Handle the event
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    const customer = await stripe.customers.retrieve(session.customer);
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      const paymentIntentSucceeded = event.data.object;
+      // ... (existing code to extract order data)
 
-    await createOrder(customer, session);
+      // Create new Order document
+      const order = new Order({
+        userId,
+        products,
+        subtotal,
+        total,
+        shipping,
+        payment_status
+      });
+
+      try {
+        // Wait for the order to be saved before sending response
+        await order.save();
+        console.log("Order saved successfully");
+      } catch (error) {
+        console.error("Error saving order:", error);
+        // Consider sending an error response here (optional)
+      }
+      break;
+    // Add default case to handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
   }
 
-  res.sendStatus(200);
+  // Send response after order is saved (or error handled)
+  response.send();
 });
-
-
-
-// Function to create order
-const createOrder = async (customer, session) => {
-  const parsedProducts = JSON.parse(customer.metadata.cart);
-
-  const newOrder = new Order({
-    userId: customer.metadata.userId,
-    products: parsedProducts.map(product => ({
-      productId: product.productId, // Assuming product.productId corresponds to the ID in your schema
-      quantity: product.quantity,
-    })),
-    subtotal: data.amount_subtotal, // Assuming data contains the necessary information
-    total: data.amount_total, // Assuming data contains the necessary information
-    shipping: data.customer_details, // Assuming data contains the necessary information
-    payment_status: data.payment_status, // Assuming data contains the necessary information
-  });
-  
-
-  try {
-    const savedOrder = await newOrder.save();
-    console.log("Processed Order:", savedOrder);
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 export default router;

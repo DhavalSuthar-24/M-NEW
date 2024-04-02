@@ -66,7 +66,7 @@ const PieChart = () => {
   }, [categoryData]);
 
   return (
-    <div style={{ width: '888px', height: '588px' }} className='flex justify-center items-start mt-2'>
+    <div style={{ width: '888px', height: '588px' }} className='flex justify-start lg:justify-center items-start mt-2'>
       <canvas ref={chartRef} />
     </div>
   );
