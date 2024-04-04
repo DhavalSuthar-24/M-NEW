@@ -91,6 +91,10 @@ const handleSignout = async()=>{
             <Dropdown.Item>Profile</Dropdown.Item>
            </Link>
            <DropdownDivider/>
+           <Link to={"/order"}>
+            <Dropdown.Item>Order</Dropdown.Item>
+            </Link>
+            <DropdownDivider/>
            <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
           </Dropdown>
         ) : (

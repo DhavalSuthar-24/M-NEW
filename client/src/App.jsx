@@ -25,6 +25,9 @@ import AddProduct from './pages/AddProduct';
 import Cart from './Components/Cart';
 import ProductView from './Components/ProductView';
 import UpdateProduct from './pages/updateProduct';
+import PaymentSuccess from './pages/paymentSucess';
+import PaymentFailure from './pages/PaymentFailure';
+import Order from './pages/Order';
 
 const App = () => {
   return (
@@ -46,11 +49,13 @@ const App = () => {
           <Route path='/add-product' element={<AddProduct />} />
           <Route path='/update-product/:productId' element={<UpdateProduct />} />
         </Route>
-
+      <Route path='/payment-success' element={<PaymentSuccess/>}/>
+      <Route path='/payment-failure' element={<PaymentFailure/>}/>
         <Route path='/e-store' element={<Projects />} />
         <Route path='/post/:postSlug' element={<PostPage />} />
         <Route path='/product/:id' element={<ProductView />} />
         <Route path='/cart' element={<Cart />} />
+        <Route path='/order' element={<Order/>} />
 
    
    </Routes>

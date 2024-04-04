@@ -102,9 +102,9 @@ const Products = () => {
       <Cart
         cartItems={cartItems}
         updateQuantity={handleUpdateQuantity}
-        isVisible={cartVisible}
+        
         removeFromCart={handleRemoveFromCart}
-        toggleVisibility={handleToggleCartVisibility}
+  
       />
     </div>
   );

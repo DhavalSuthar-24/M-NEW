@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
@@ -8,7 +8,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdateProduct = () => {
-  const [formData, setFormData] = useState({ title: '', category: '', quantity: 1, price: 1, content: '' });
+  const [formData, setFormData] = useState({});
 
   const [imageUploadProgress, setImageUploadProgress] = useState({});
   const [imageUploadError, setImageUploadError] = useState({});
@@ -27,14 +27,21 @@ const UpdateProduct = () => {
         }
         setPublishError(null);
         setFormData(data.product);
+
       } catch (error) {
         console.log(error.message);
         setPublishError('Something went wrong');
       }
     };
-
+  
     fetchProduct();
   }, [productId]);
+  
+  if (!formData) {
+    console.log(formData)
+    return <div>Loading...</div>; // Add a loading indicator
+  }
+  
 
   const handleUploadImage = async (index, file) => {
     try {

@@ -2,15 +2,19 @@ import { FaTimes } from 'react-icons/fa';
 import { loadStripe } from '@stripe/stripe-js';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import {  updateQuantity, removeFromCart } from '../redux/cart/cartSlice';
+import {  updateQuantity, removeFromCart,toggleCartVisibility } from '../redux/cart/cartSlice';
 import { Link } from 'react-router-dom';
 
-const Cart = ({ isVisible, toggleVisibility }) => {
+
+const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const cartVisible = useSelector(state => state.cart.cartVisible);
   const [totalAmount, setTotalAmount] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
-
+  const toggleVisibility  =()=>{
+    dispatch(toggleCartVisibility());
+  }
 
   useEffect(() => {
     const calculateTotal = () => {
@@ -70,7 +74,7 @@ const Cart = ({ isVisible, toggleVisibility }) => {
     dispatch(removeFromCart(itemId));
   };
 
-  return isVisible ? (
+  return cartVisible ? (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-4 relative">
         <button

@@ -9,6 +9,7 @@ import { addToCart } from '../redux/cart/cartSlice';
 
 
 const ProductView = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const { id } = useParams(); // Get the product ID from the URL params
   const [product, setProduct] = useState(null); // Changed from 'products' to 'product'
 
@@ -18,7 +19,7 @@ const ProductView = () => {
   const [discountType, setDiscountType] = useState("");
   const [discountValue, setDiscountValue] = useState(0);
   const [discountedPrice, setDiscountedPrice] = useState(0);
-  const { currentUser } = useSelector((state) => state.user);
+
   const [quantity, setQuantity] = useState(1); // Default quantity is zero
   const dispatch = useDispatch();
   useEffect(() => {
@@ -108,7 +109,8 @@ const ProductView = () => {
       const updatedProductsArray = [updatedProduct];
   
       const body = {
-        products: updatedProductsArray
+        products: updatedProductsArray,
+        userId:currentUser._id
       };
   
       const response = await fetch('http://localhost:3000/api/stripe/create-checkout-session', {

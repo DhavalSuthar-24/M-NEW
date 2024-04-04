@@ -8,6 +8,7 @@ import commentRoute from "./routes/comment.route.js";
 import productRoute from "./routes/product.route.js";
 import stripeRoute from "./routes/stripe.route.js";
 import coupenRoute from "./routes/coupon.route.js";
+import orderRoute from "./routes/order.route.js";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import path from 'path';
@@ -19,6 +20,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
 app.use(cookieParser());
 
 // Static files
@@ -32,7 +34,9 @@ app.use("/api/post", postRoute);
 app.use("/api/comment", commentRoute);
 app.use("/api/product",productRoute);
 app.use('/api/stripe',stripeRoute);
-app.use('/api/coupon',coupenRoute)
+app.use('/api/coupon',coupenRoute);
+app.use('/api/order',orderRoute)
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     const statuscode = err.statusCode || 500;
