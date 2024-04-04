@@ -11,7 +11,8 @@ const orderSchema = new mongoose.Schema(
     shipping: { type: Object, required: true },
     delivery_status: { type: String, default: "pending" },
     payment_status: { type: String, required: true },
-    receipt_url:{type:String},
+    orderConformation:{type:String},
+
   },
   { timestamps: true }
 );

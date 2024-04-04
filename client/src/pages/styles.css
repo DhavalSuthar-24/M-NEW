@@ -1,0 +1,39 @@
+.progress-bar {
+  position: relative;
+  height: 32px;
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 4px;
+}
+
+.progress {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0%;
+  height: 4px;
+  background-color: rgba(0, 0, 0, 0.1); /* Low opacity line color */
+  transition: width 0.5s ease, background-color 0.5s ease; /* Added transition for line color */
+}
+
+.progress.active {
+  background-color: #28a745; /* Light green line color */
+}
+
+.phase {
+  position: absolute;
+  bottom: -20px;
+  font-size: 12px;
+  color: #999;
+  transform: translateX(-50%);
+}
+
+.circle {
+  position: absolute;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #000; /* Line color */
+  transform: translate(-50%, 50%);
+}

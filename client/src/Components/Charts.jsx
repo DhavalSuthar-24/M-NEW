@@ -7,6 +7,7 @@ const Charts = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [chartInstance, setChartInstance] = useState(null); // Store Chart instance
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -35,6 +36,10 @@ const Charts = () => {
 
   useEffect(() => {
     if (chartRef.current && productData.length > 0) {
+      if (chartInstance) {
+        chartInstance.destroy(); // Destroy existing chart
+      }
+      
       const chartLabels = productData.map(product => product.title);
       const chartValues = productData.map(product => product.quantity);
       
@@ -53,10 +58,12 @@ const Charts = () => {
 
       const ctx = chartRef.current.getContext('2d');
 
-      new Chart(ctx, {
+      const newChartInstance = new Chart(ctx, {
         type: 'bar',
         data: chartData
       });
+
+      setChartInstance(newChartInstance); // Store new Chart instance
     }
   }, [productData]);
 
@@ -71,13 +78,11 @@ const Charts = () => {
       </div>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
-      {productData.length > 9 && (
-        <div className="flex justify-center mt-4">
-          <button onClick={handleShowMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Show More
-          </button>
-        </div>
-      )}
+      <div className="flex justify-center mt-4">
+        <button onClick={handleShowMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Show More
+        </button>
+      </div>
     </div>
   );
 };

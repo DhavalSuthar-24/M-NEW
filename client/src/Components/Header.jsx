@@ -84,7 +84,7 @@ const handleSignout = async()=>{
           }>
 
            <Dropdown.Header>
-            <span className="black text-sm ">@{currentUser.username}</span>
+            <span className="black text-sm ">@{currentUser.username}   </span> 
             <span className="black text-sm  font-medium truncate">{currentUser.email}</span>
            </Dropdown.Header>
            <Link to={"/dashboard?tab=profile"}>

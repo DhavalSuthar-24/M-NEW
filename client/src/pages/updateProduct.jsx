@@ -17,6 +17,7 @@ const UpdateProduct = () => {
   const { productId } = useParams();
 
   useEffect(() => {
+    console.log(productId)
     const fetchProduct = async () => {
       try {
         const res = await fetch(`/api/product/getproduct/${productId}`);
@@ -26,7 +27,7 @@ const UpdateProduct = () => {
           return;
         }
         setPublishError(null);
-        setFormData(data.product);
+        setFormData(data);
 
       } catch (error) {
         console.log(error.message);
