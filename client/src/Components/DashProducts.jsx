@@ -84,14 +84,16 @@ export default function DashProducts() {
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
             {products.map((product) => (
-              <Table.Body className='divide-y'>
+              <Table.Body key={product._id} className='divide-y'>
                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <Table.Cell>
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className='w-20 h-10 object-cover bg-gray-500'
-                    />
+                    <Link to={`/product/${product._id}`}>
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className='w-20 h-10 object-cover bg-gray-500'
+                      />
+                    </Link>
                   </Table.Cell>
                   <Table.Cell>
                     <Link
@@ -129,7 +131,8 @@ export default function DashProducts() {
           {showMore && (
             <button
               onClick={handleShowMore}
-              className='w-full text-teal-500 self-center text-sm py-7'
+              className='w-full text-teal-500 self-center text-sm py-7 overflow-hidden'
+              style={{ overflow: 'hidden' }}
             >
               Show more
             </button>

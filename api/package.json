@@ -20,6 +20,7 @@
     "inshorts-api": "^1.0.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.1",
+    "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
     "raw-body": "^2.5.2",
     "stripe": "^14.22.0"

@@ -85,6 +85,11 @@ function DashSidebar() {
                          <Link to='/dashboard/?tab=products'>
                            <Sidebar.Item active={tab==="products"} icon={FaShoppingBag}  labelColor="dark" as='div'  as='div'>Products</Sidebar.Item>
                   </Link> ) }
+                  {
+                      currentUser.isAdmin &&(
+                         <Link to='/dashboard/?tab=order-management'>
+                           <Sidebar.Item active={tab==="order-management"} icon={FaShoppingBag}  labelColor="dark" as='div'  as='div'>Manage orders</Sidebar.Item>
+                  </Link> ) }
 
                   {
                       currentUser.isAdmin &&(

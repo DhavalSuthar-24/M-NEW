@@ -227,7 +227,10 @@ const ProductView = () => {
         )}
       </div>
     </div>
-        <p className="text-gray-700">{product.content}</p>
+    <div
+        className='p-3 max-w-2xl mx-auto w-full post-content'
+        dangerouslySetInnerHTML={{ __html: product && product.content }}
+      ></div>
         <div className="mt-4">
           <input type="text" value={couponCode} onChange={handleCouponCodeChange} placeholder="Enter coupon code" className="border border-gray-400 rounded px-3 py-2 mr-2" />
           <button onClick={applyCouponCode} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition duration-300">Apply Coupon</button>

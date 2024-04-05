@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node api/index.js",
-    "dev":"nodemon api/index.js",
-
+    "dev": "nodemon api/index.js",
     "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "author": "",
@@ -20,8 +19,8 @@
     "inshorts-api": "^1.0.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.1",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "xlsx": "^0.18.5"
   },
   "keywords": []
-
 }
