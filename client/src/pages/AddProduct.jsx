@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
+
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -203,13 +206,14 @@ const AddProduct = () => {
           </Button>
         </div>
 
-        <textarea
-          id='content'
+        <ReactQuill id="content"
+          theme='snow'
           placeholder='Write something...'
-          className='h-36 mb-12'
+          className='h-72 mb-12'
           required
-          value={formData.content}
-          onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+          onChange={(value) => {
+            setFormData({ ...formData, content: value });
+          }}
         />
         <Button type='submit' gradientDuoTone='purpleToPink'>
           Publish

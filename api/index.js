@@ -44,14 +44,6 @@ app.use((err, req, res, next) => {
     res.status(statuscode).json({ success: false, statuscode, message });
 });
 
-// // Serve index.html for all other routes
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-//   });
-  
-
-// Database connection
-
 
 mongoose.connect(process.env.MONGOURI || 'mongodb+srv://dhavalll63:dks123@cluster0.c8vw6id.mongodb.net/project' ).then(() => {
     console.log("Connected to database");
@@ -63,6 +55,6 @@ mongoose.connect(process.env.MONGOURI || 'mongodb+srv://dhavalll63:dks123@cluste
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(process.env.MONGOURI);
+    // console.log(process.env.MONGOURI);
     console.log(`Server is listening on port ${PORT}`);
 });

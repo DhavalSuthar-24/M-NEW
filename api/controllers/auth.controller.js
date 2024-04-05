@@ -17,7 +17,7 @@ export const signup = async(req,res,next)=>{
  }).catch((e)=>{
     next(e)
  })
-}
+} 
 
 export const signin = async(req,res,next)=>{
  const {email,password} = req.body;
@@ -55,7 +55,7 @@ export const signin = async(req,res,next)=>{
        const user = await User.findOne({ email });
        if (user) {
            // User already exists
-           const token = jwt.sign({ id: user._id,isAdmin:user.isAdmin }, process.env.JWT_SECRET);
+           const token = jwt.sign({ id: user._id,isAdmin:user.isAdmin }, process.env.JWT_SECRET ||'leo7');
            const { password, ...rest } = user._doc;
            res.status(200).cookie('access_token', token, {
                httpOnly: true

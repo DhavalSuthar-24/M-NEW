@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+
+import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
@@ -116,11 +118,11 @@ const UpdateProduct = () => {
           placeholder='Title'
           required
           id='title'
-          value={formData.title || ''}
+          value={formData.title }
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
         />
         <Select
-          value={formData.category || 'uncategorized'}
+          value={formData.category }
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
         >
           <option value='uncategorized'>Select a category</option>
@@ -134,7 +136,7 @@ const UpdateProduct = () => {
           placeholder='Add quantity'
           required
           id='quantity'
-          value={formData.quantity || ''}
+          value={formData.quantity }
           onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
         />
         <TextInput
@@ -142,7 +144,7 @@ const UpdateProduct = () => {
           placeholder='Add Price'
           required
           id='price'
-          value={formData.price || ''}
+          value={formData.price }
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
         />
 
@@ -231,15 +233,17 @@ const UpdateProduct = () => {
             )}
           </Button>
         </div>
-
-        <textarea
-          id='content'
+        <ReactQuill id="content"
+          theme='snow'
           placeholder='Write something...'
-          className='h-36 mb-12'
-          required
+          className='h-72 mb-12'
           value={formData.content || ''}
-          onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+          required
+          onChange={(value) => {
+            setFormData({ ...formData, content:value });
+          }}
         />
+       
         <Button type='submit' gradientDuoTone='purpleToPink'>
           Update Product
         </Button>
