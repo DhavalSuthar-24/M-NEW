@@ -230,7 +230,7 @@ const ProductView = () => {
     <span >New Price: <span className="font-bold" >  ₹{discountedPrice}</span></span>
   </span>
 ) : (
-  <span>${product.price}</span>
+  <span className="dark:text-white">${product.price}</span>
 )}
 
           </p>

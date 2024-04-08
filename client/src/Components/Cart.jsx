@@ -76,14 +76,14 @@ const Cart = () => {
 
   return cartVisible ? (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-4 relative">
+      <div className="max-w-4xl mx-auto  bg-white  shadow-lg rounded-lg p-4 relative">
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 focus:outline-none"
           onClick={toggleVisibility}
         >
           <FaTimes />
         </button>
-        <h2 className="text-3xl font-bold mb-4">Shopping Cart</h2>
+        <h2 className="text-3xl font-bold mb-4 dark:text-black">Shopping Cart</h2>
         {cartItems.length === 0 && (
           <p className="text-center text-gray-500">Your cart is empty.</p>
         )}
@@ -91,7 +91,7 @@ const Cart = () => {
           <div key={item._id} className="flex items-center border-b py-4">
             <img src={item.image} alt={item.title} className="w-20 h-20 object-cover mr-4" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold">{item.title}</h3>
+              <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
               <p className="text-gray-600">Price: ₹{item.price}</p>
               <div className="flex items-center mt-2">
                 <button
@@ -100,7 +100,7 @@ const Cart = () => {
                 >
                   -
                 </button>
-                <span className="px-3 py-1 border">{item.quantity || 0}</span>
+                <span className="px-3 py-1 border text-gray-500">{item.quantity || 0}</span>
                 <button
                   className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full ml-2 hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   onClick={() => handleUpdateQuantity(item._id, (item.quantity || 0) + 1)}
