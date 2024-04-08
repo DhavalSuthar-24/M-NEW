@@ -11,7 +11,8 @@ import { addToCart } from '../redux/cart/cartSlice';
 const ProductView = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { id } = useParams(); // Get the product ID from the URL params
-  const [product, setProduct] = useState(null); // Changed from 'products' to 'product'
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState(""); // Changed from 'products' to 'product'
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [couponCode, setCouponCode] = useState("");
@@ -64,31 +65,52 @@ const ProductView = () => {
   const applyCouponCode = async () => {
     try {
       const response = await fetch(`/api/coupon/check/${couponCode}`);
-      if (!response.ok) {
-        throw new Error('Failed to check coupon validity');
-      }
       const data = await response.json();
-      if (!data.coupon.isUsed && !discountApplied) {
-        setDiscountApplied(true);
-        const { discountType, discountValue } = data.coupon;
-        setDiscountType(discountType);
-        setDiscountValue(discountValue);
-        let newDiscountedPrice;
-        if (discountType === 'percentage') {
-          newDiscountedPrice = (product.price * (1 - discountValue / 100)).toFixed(2);
-        } else {
-          newDiscountedPrice = (product.price - discountValue).toFixed(2);
-        }
-        setDiscountedPrice(newDiscountedPrice);
-      } else {
-        // If no coupon is applied, set the discounted price to the original product price
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to check coupon validity');
+      }
+  
+      if (!data.coupon) {
+        throw new Error('Coupon not found');
+      }
+  
+      if (data.coupon.isUsed) {
         setDiscountedPrice(product.price);
         setDiscountApplied(false);
+        setError('Coupon has already been used'); // Set error message
+        return;
+      }
+  
+      setDiscountApplied(true);
+      const { discountType, discountValue } = data.coupon;
+      setDiscountType(discountType);
+      setDiscountValue(discountValue);
+      let newDiscountedPrice;
+      if (discountType === 'percentage') {
+        newDiscountedPrice = (product.price * (1 - discountValue / 100)).toFixed(2);
+      } else {
+        newDiscountedPrice = (product.price - discountValue).toFixed(2);
+      }
+      setDiscountedPrice(newDiscountedPrice);
+  
+      const markUsedResponse = await fetch(`/api/coupon/mark-used/${couponCode}`, {
+        method: 'POST',
+      });
+  
+      if (!markUsedResponse.ok) {
+        throw new Error('Failed to mark coupon as used');
       }
     } catch (error) {
       console.error(error);
+      setError(error.message); // Set error message
     }
   };
+  
+  
+  
+  
+  
   
   
 
@@ -234,6 +256,7 @@ const ProductView = () => {
         <div className="mt-4">
           <input type="text" value={couponCode} onChange={handleCouponCodeChange} placeholder="Enter coupon code" className="border border-gray-400 rounded px-3 py-2 mr-2" />
           <button onClick={applyCouponCode} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition duration-300">Apply Coupon</button>
+          {error && <p className="text-red-600 mt-2">{error}</p>} {/* Display error message */}
         </div>
         {discountApplied && (
           <p className="text-green-600 mt-2">Discount applied successfully!</p>

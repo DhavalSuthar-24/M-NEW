@@ -35,26 +35,30 @@ router.get("/getOrdersDetails", async (req, res) => {
               model: 'User'
           });
 
-      const formattedOrders = orders.map(order => {
-          return {
-              _id: order._id,
-              orderDate: order.createdAt,
-              orderConfirmation: order.orderConfirmation,
-              subtotal: order.subtotal,
-              deliveryStatus: order.delivery_status,
-              products: order.products.map(product => {
-                  return {
-                      quantity: product.quantity, // Access 'quantity' directly from the product object
-                      title: product.productId.title,
-                      image: product.productId.image,
-                      price: product.productId.price,
-                      category: product.productId.category
-
-                  };
-              }),
-              user: order.userId.username
-          };
-      });
+          const formattedOrders = orders.map(order => {
+            return {
+                _id: order._id,
+                orderDate: order.createdAt,
+                orderConfirmation: order.orderConfirmation,
+                subtotal: order.subtotal,
+                deliveryStatus: order.delivery_status,
+                products: order.products.map(product => {
+                    return {
+                        quantity: product.quantity,
+                        title: product.productId.title,
+                        image: product.productId.image,
+                        price: product.productId.price,
+                        category: product.productId.category
+                    };
+                }),
+                address: order.shipping ? `${order.shipping.address.city}, ${order.shipping.address.postal_code || ''}` : '',
+                user: order.userId.username
+            };
+        });
+        
+        
+        
+        
 
       res.status(200).json(formattedOrders);
   } catch (error) {
