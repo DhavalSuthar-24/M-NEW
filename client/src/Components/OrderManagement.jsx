@@ -2,7 +2,7 @@ import { Modal, Table, Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
 
 export default function OrderManagement() {
   const { currentUser } = useSelector((state) => state.user);
@@ -80,51 +80,51 @@ export default function OrderManagement() {
     }
   };
 
-  const handleDownloadOrderSheet = () => {
-    // Map the orders data to include additional fields
-    const ordersData = orders.map(order => ({
-      Order_ID: order._id,
-      Order_Date: new Date(order.orderDate).toLocaleDateString(),
-      Order_Confirmation: order.orderConfirmation ? 'CONFIRMED' : 'PENDING',
-      Delivery_Status: order.deliveryStatus,
-      Subtotal: `$${(order.subtotal / 100).toFixed(2)}`,
-      Product_Title: order.products[0].title,
-      Quantity: order.products[0].quantity,
-      Category: order.products[0].category,
-      User_ID: order.user,
-    }));
+  // const handleDownloadOrderSheet = () => {
+  //   // Map the orders data to include additional fields
+  //   const ordersData = orders.map(order => ({
+  //     Order_ID: order._id,
+  //     Order_Date: new Date(order.orderDate).toLocaleDateString(),
+  //     Order_Confirmation: order.orderConfirmation ? 'CONFIRMED' : 'PENDING',
+  //     Delivery_Status: order.deliveryStatus,
+  //     Subtotal: `$${(order.subtotal / 100).toFixed(2)}`,
+  //     Product_Title: order.products[0].title,
+  //     Quantity: order.products[0].quantity,
+  //     Category: order.products[0].category,
+  //     User_ID: order.user,
+  //   }));
 
-    // Create a new workbook and worksheet
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(ordersData);
+  //   // Create a new workbook and worksheet
+  //   const workbook = XLSX.utils.book_new();
+  //   const worksheet = XLSX.utils.json_to_sheet(ordersData);
 
-    // Add the worksheet to the workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
+  //   // Add the worksheet to the workbook
+  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
 
-    // Convert the workbook to a binary string
-    const wbBinaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
+  //   // Convert the workbook to a binary string
+  //   const wbBinaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
 
-    // Convert the binary string to a Blob
-    const wbBlob = new Blob([s2ab(wbBinaryString)], { type: 'application/octet-stream' });
+  //   // Convert the binary string to a Blob
+  //   const wbBlob = new Blob([s2ab(wbBinaryString)], { type: 'application/octet-stream' });
 
-    // Create a download link and trigger the download
-    const url = window.URL.createObjectURL(wbBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'orders.xlsx';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
+  //   // Create a download link and trigger the download
+  //   const url = window.URL.createObjectURL(wbBlob);
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = 'orders.xlsx';
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  //   window.URL.revokeObjectURL(url);
+  // };
 
-  // Utility function to convert a string to an ArrayBuffer
-  const s2ab = (s) => {
-    const buf = new ArrayBuffer(s.length);
-    const view = new Uint8Array(buf);
-    for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-    return buf;
-  };
+  // // Utility function to convert a string to an ArrayBuffer
+  // const s2ab = (s) => {
+  //   const buf = new ArrayBuffer(s.length);
+  //   const view = new Uint8Array(buf);
+  //   for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+  //   return buf;
+  // };
 
   return (
     <div className='max-w-full overflow-x-auto md:mx-auto p-1 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
@@ -158,9 +158,9 @@ export default function OrderManagement() {
               </Table.Body>
             ))}
           </Table>
-          <Button className='bg-green-400 px-3 mt-4' onClick={handleDownloadOrderSheet}>
+          {/* <Button className='bg-green-400 px-3 mt-4' onClick={handleDownloadOrderSheet}>
             Download Order Sheet
-          </Button>
+          </Button> */}
         </>
       ) : (
         <p>No orders available!</p>
