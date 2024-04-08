@@ -8,10 +8,16 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch('/api/post/getposts');
+      const res = await fetch('/api/post/getposts', {
+        cache: 'no-cache', // Optional: Set cache to 'no-cache' for stricter control
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate' // More comprehensive caching control
+        }
+      });
       const data = await res.json();
       setPosts(data.posts);
     };
+    
     fetchPosts();
   }, []);
   return (
