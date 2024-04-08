@@ -2,7 +2,8 @@ import { Modal, Table, Button } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx';
+
 
 export default function OrderManagement() {
   const { currentUser } = useSelector((state) => state.user);
