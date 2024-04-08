@@ -1,9 +1,8 @@
 import { Modal, Table, Button } from 'flowbite-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import XLSX from 'xlsx';
-
+import * as XLSX from 'xlsx';
 
 export default function OrderManagement() {
   const { currentUser } = useSelector((state) => state.user);
@@ -86,7 +85,7 @@ export default function OrderManagement() {
     const ordersData = orders.map(order => ({
       Order_ID: order._id,
       Order_Date: new Date(order.orderDate).toLocaleDateString(),
-      Order_Confirmation: order.orderConfirmation ? 'CONFIRMED' : 'PENDING' ,
+      Order_Confirmation: order.orderConfirmation ? 'CONFIRMED' : 'PENDING',
       Delivery_Status: order.deliveryStatus,
       Subtotal: `$${(order.subtotal / 100).toFixed(2)}`,
       Product_Title: order.products[0].title,
@@ -94,20 +93,20 @@ export default function OrderManagement() {
       Category: order.products[0].category,
       User_ID: order.user,
     }));
-  
+
     // Create a new workbook and worksheet
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(ordersData);
-  
+
     // Add the worksheet to the workbook
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
-  
+
     // Convert the workbook to a binary string
-    const wbBinaryString = XLSX.write(workbook, { type: 'binary' });
-  
+    const wbBinaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
+
     // Convert the binary string to a Blob
     const wbBlob = new Blob([s2ab(wbBinaryString)], { type: 'application/octet-stream' });
-  
+
     // Create a download link and trigger the download
     const url = window.URL.createObjectURL(wbBlob);
     const a = document.createElement('a');
@@ -118,9 +117,7 @@ export default function OrderManagement() {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   };
-  
-  
-  
+
   // Utility function to convert a string to an ArrayBuffer
   const s2ab = (s) => {
     const buf = new ArrayBuffer(s.length);
@@ -128,7 +125,6 @@ export default function OrderManagement() {
     for (let i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
     return buf;
   };
-  
 
   return (
     <div className='max-w-full overflow-x-auto md:mx-auto p-1 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
@@ -154,11 +150,10 @@ export default function OrderManagement() {
                   <Table.Cell>{order.products[0].title}</Table.Cell>
                   <Table.Cell>{order.products[0].category}</Table.Cell>
                   <Table.Cell>{order.products[0].quantity}</Table.Cell>
-                  <Table.Cell>$ { (order.subtotal/100).toFixed(2)}</Table.Cell>
+                  <Table.Cell>$ {(order.subtotal / 100).toFixed(2)}</Table.Cell>
                   <Table.Cell>{order.deliveryStatus}</Table.Cell>
                   <Table.Cell className={order.orderConfirmation ? 'font-semibold' : ''}>{order.orderConfirmation ? 'Confirmed' : 'Pending'}</Table.Cell>
-               <Table.Cell > <Button onClick={()=>{handleManageOrder(order._id)}} className=''>Manage
-               Order</Button></Table.Cell>
+                  <Table.Cell><Button onClick={() => { handleManageOrder(order._id) }}>Manage Order</Button></Table.Cell>
                 </Table.Row>
               </Table.Body>
             ))}
