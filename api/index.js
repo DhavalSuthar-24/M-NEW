@@ -26,25 +26,26 @@ app.use(cookieParser());
 // Static files
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, '/client/dist')));
-app.get('*',(req,res)=>{
-    res.sendFile(path.join(__dirname, 'client','dist','index.html'));
 
-})
 
 app.use('/api', (req, res, next) => {
     res.set('Cache-Control', 'no-store');
     next();
   });
 // Routes
+app.use("/api/post", postRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
-app.use("/api/post", postRoute);
+
 app.use("/api/comment", commentRoute);
 app.use("/api/product",productRoute);
 app.use('/api/stripe',stripeRoute);
 app.use('/api/coupon',coupenRoute);
 app.use('/api/order',orderRoute)
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname, 'client','dist','index.html'));
 
+})
 // Error handling middleware
 app.use((err, req, res, next) => {
     const statuscode = err.statusCode || 500;
