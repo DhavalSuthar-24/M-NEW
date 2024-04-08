@@ -24,7 +24,7 @@ const Products = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/product/getProducts?page=${currentPage}&limit=${productsPerPage}`);
+      const res = await fetch(`/api/product/getproducts?page=${currentPage}&limit=${productsPerPage}`);
       if (!res.ok) {
         throw new Error('Failed to fetch products');
       }

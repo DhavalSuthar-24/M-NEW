@@ -2,7 +2,7 @@ import React from 'react';
 
 function About() {
   return (
-    <div className="bg-blue-100 min-h-screen flex justify-center items-center">
+    <div className=" min-h-screen flex justify-center items-center">
       <div className="max-w-2xl p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-3xl font-bold mb-4 text-black">About DK's Blog</h2>
         <p className="text-lg mb-6 text-black">Welcome to DK's Blog, where we delve into various topics related to web development, programming, and more.</p>
