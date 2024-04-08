@@ -1,19 +1,20 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  rollupOptions: {
-    external: ['xlsx']
-  }
-,
-  server:{
-    proxy:{
+  plugins: [react()],
+  server: {
+    proxy: {
       '/api': {
         target: 'http://localhost:3000',
-        secure:false
+        secure: false
       }
     }
   },
-  plugins: [react()],
-})
+  // Define rollupOptions within build option
+  build: {
+    rollupOptions: {
+      external: ['xlsx']
+    }
+  }
+});
