@@ -11,7 +11,7 @@ const Signup = () => {
   const getPasswordSuggestion = (password) => {
     if (!password) return "Password is required";
   
-    // Check if the password contains only digits
+   
     if (/^\d+$/.test(password)) return "Password should contain letters and special characters.";
   
     // Check if the password contains only lowercase letters
