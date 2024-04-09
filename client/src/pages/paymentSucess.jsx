@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
 import { clearCart,toggleCartVisibility } from '../redux/cart/cartSlice'; // Import the clearCart action from your Redux slice
 
 const PaymentSuccess = () => {
   const dispatch = useDispatch();
-
+const {cartVisible}=useSelector(state=>state.cart)
   useEffect(() => {
     // Dispatch the clearCart action when the component mounts
     dispatch(clearCart());
-    dispatch(toggleCartVisibility(false));
+    // if(cartVisible){
+    // dispatch(toggleCartVisibility(false));}
   }, [dispatch]); // Dependency array with dispatch as the dependency
 
   return (
