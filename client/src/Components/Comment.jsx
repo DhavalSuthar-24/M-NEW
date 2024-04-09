@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { FaThumbsUp } from 'react-icons/fa';
@@ -25,6 +26,8 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
     };
     getUser();
   }, [comment]);
+  // const textColorClass = comment.numberOfLikes > 0 ? 'text-blue-700 hover:text-blue-500' : 'text-gray-400 hover:text-blue-500';
+
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -110,6 +113,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
 >
   <FaThumbsUp className='text-sm' />
 </button>
+
 
               <p className='text-gray-400'>
                 {comment.numberOfLikes > 0 &&
