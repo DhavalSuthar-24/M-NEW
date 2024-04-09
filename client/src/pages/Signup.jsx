@@ -8,6 +8,30 @@ const Signup = () => {
   const [Errormsg, setErrormsg] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const getPasswordSuggestion = (password) => {
+    if (!password) return "Password is required";
+  
+    // Check if the password contains only digits
+    if (/^\d+$/.test(password)) return "Password should contain letters and special characters.";
+  
+    // Check if the password contains only lowercase letters
+    if (/^[a-z]+$/.test(password)) return "Password should contain uppercase letters and special characters.";
+  
+    // Check if the password contains only uppercase letters
+    if (/^[A-Z]+$/.test(password)) return "Password should contain lowercase letters and special characters.";
+  
+    // Check if the password contains at least one lowercase and one uppercase letter, and one special character
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[^a-zA-Z0-9]/.test(password)) {
+      return "Password should contain both uppercase and lowercase letters, and at least one special character.";
+    }
+  
+    // Check if the password length is less than 8 characters
+    if (password.length < 8) return "Password should be at least 8 characters long.";
+  
+    return null; // Password meets all conditions
+  };
+  
+  
 
   const handleChange = (e) => {
     setFormData({ ...formdata, [e.target.id]: e.target.value.trim() });
@@ -76,6 +100,9 @@ const Signup = () => {
                 <Alert className="mt-2" color="failure">
                   {Errormsg}
                 </Alert>
+              )}
+              {formdata.password && getPasswordSuggestion(formdata.password) && (
+                <div className="text-sm text-gray-500 mt-1">{getPasswordSuggestion(formdata.password)}</div>
               )}
             </div>
             <Button gradientDuoTone="purpleToPink" type="submit" disabled={loading}>

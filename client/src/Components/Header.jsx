@@ -111,7 +111,7 @@ const handleSignout = async()=>{
         <Navbar.Link active={path === "/about"} as={'div'}>
           <Link to="/about">About</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/projects"} as={'div'}>
+        <Navbar.Link active={path === "/e-store"} as={'div'}>
           <Link to="/e-store">E-store</Link>
         </Navbar.Link>
       </Navbar.Collapse>
