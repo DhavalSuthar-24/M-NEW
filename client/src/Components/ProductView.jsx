@@ -250,7 +250,7 @@ const ProductView = () => {
       </div>
     </div>
     <div
-        className='p-3 max-w-2xl mx-auto w-full post-content'
+        className='p-3 max-w-2xl mx-auto w-full '
         dangerouslySetInnerHTML={{ __html: product && product.content }}
       ></div>
         <div className="mt-4">

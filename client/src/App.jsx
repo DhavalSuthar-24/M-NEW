@@ -29,6 +29,7 @@ import PaymentSuccess from './pages/paymentSucess';
 import PaymentFailure from './pages/PaymentFailure';
 import Order from './pages/Order';
 import OrderManagement from './Components/OrderManagement';
+import LeafletMap from './Components/LeafletMap';
 
 const App = () => {
   return (
@@ -57,6 +58,7 @@ const App = () => {
         <Route path='/product/:id' element={<ProductView />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/order' element={<Order/>} />
+        <Route path='/map' element  ={<LeafletMap/>}/>
         <Route path='/order-management' element={<OrderManagement/>}/>
 
    

@@ -158,35 +158,41 @@ const handleSignout = async()=>{
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <input type="file" accept="image/*" onChange={handleImageChange} ref={filePickerRef} hidden />
                 <div className="w-32 h-32 self-center cursor-pointer shadow-md rounded-full overflow-hidden relative" onClick={() => filePickerRef.current.click()}>
-                    {imageUploadProgress && (
-                        <CircularProgressbar
-                            value={imageUploadProgress || 0}
-                            text={`${imageUploadProgress}%`}
-                            strokeWidth={5}
-                            styles={{
-                                root: {
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    zIndex: 1,
-                                },
-                                path: {
-                                    stroke: '#fff',
-                                    transition: `rgba(62,152,199,${imageUploadProgress / 100})`,
-                                    transform: `rotate(${imageUploadProgress}deg)`
-                                },
-                            }}
-                        />
-                    )}
-                    <img
-                        src={imageFileUrl || currentUser.profilepic}
-                        alt="user"
-                        className={`self-center w-full h-full border-4 object-cover border-gray-300 absolute top-0 left-0 transform-translate-x-1/2 transform-translate-y-1/2 ${imageUploadProgress && imageUploadProgress < 100 && 'opacity-60'}`}
-                        style={{ zIndex: 0 }}
-                    />
-                </div>
+  {imageUploadProgress && imageUploadProgress < 100 && (
+    <CircularProgressbar
+      value={imageUploadProgress}
+      text={`${imageUploadProgress}%`}
+      strokeWidth={5}
+      styles={{
+        root: {
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 1,
+        },
+        path: {
+          stroke: '#AAA',
+          transition: `stroke-dashoffset 0.5s ease 0s`,
+        },
+        text: {
+          fill: '#303030',
+          fontSize: '16px',
+        },
+      }}
+    />
+  )}
+  <img
+    src={imageFileUrl || currentUser.profilepic}
+    alt="user"
+    className={`self-center w-full h-full border-4 object-cover border-gray-300 absolute top-0 left-0 transform-translate-x-1/2 transform-translate-y-1/2 ${
+      imageUploadProgress === 100 ? '' : 'opacity-60'
+    }`}
+    style={{ zIndex: 0 }}
+  />
+</div>
+
                 {imageFileUploadError && <Alert color='failure'>{imageFileUploadError}</Alert>}
 
                 <TextInput type="text" id="username" placeholder="Username" defaultValue={currentUser.username} onChange={handleChange} />

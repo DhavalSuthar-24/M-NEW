@@ -106,6 +106,11 @@ function DashSidebar() {
                          <Link to='/dashboard/?tab=pie'>
                            <Sidebar.Item active={tab==="pie"} icon={FaChartPie}  labelColor="dark" as='div'  as='div'>Pie</Sidebar.Item>
                   </Link> ) }
+                  {/* {
+                      currentUser.isAdmin &&(
+                         <Link to='/dashboard/?tab=map'>
+                           <Sidebar.Item active={tab==="search"} icon={HiDocumentSearch}  labelColor="dark" as='div'  as='div'>Search</Sidebar.Item>
+                  </Link> ) } */}
                    
                     <Sidebar.Item onClick={handleSignout} className="cursor-pointer"  icon={ HiArrowSmRight}   >
                     Sign out

@@ -12,16 +12,26 @@ const stripe = new Stripe('sk_test_51OySR3SH9ySesKUUn99kqLkKB5FFsLGufFhCl9ZjHbTh
 
 
 
-
+const getUserData = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    return user;
+  } catch (error) {
+    console.error("Error retrieving user data:", error);
+    throw new Error("Failed to retrieve user data");
+  }
+};
 
 
 
 
 router.post("/create-checkout-session", async (req, res) => {
   const { products, userId, username } = req.body;
-
+  const user = await getUserData(userId);
+  const userEmail = user.email;
   // Create customer and attach metadata
   const customer = await stripe.customers.create({
+    email: userEmail,
     metadata: {
       userId: userId,
       cart: JSON.stringify(products.map(product => ({ productId: product._id, quantity: product.quantity }))),
@@ -50,8 +60,9 @@ router.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: 'http://localhost:5173/payment-success',
-      cancel_url: 'http://localhost:5173/payment-failure',
+      success_url: 'https://m-new.onrender.com/payment-success',
+      cancel_url: 'https://m-new.onrender.com/payment-failure',
+      // customer_email: userEmail,
       billing_address_collection: 'required',
       shipping_options: [
         {
