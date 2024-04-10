@@ -55,9 +55,9 @@ const Signin = () => {
           <Link to="/" className="font-bold dark:text-white text-4xl">
             <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">Dk's</span>Blog
           </Link>
-          <p className="text-sm mt-5">
+          {/* <p className="text-sm mt-5">
             This is a demo page. This is not a project page. Auth with Google.
-          </p>
+          </p> */}
         </div>
         {/* Right */}
         <div className="flex-1">

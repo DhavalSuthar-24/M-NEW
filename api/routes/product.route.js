@@ -29,7 +29,7 @@ router.delete('/deleteProduct/:productId', async (req, res) => {
 });
 router.put('/updateProduct/:productId', async (req, res) => {
   const productId = req.params.productId;
-  const { title, description, price, quantity } = req.body;
+  const { title, description, price, quantity,content } = req.body;
 
   try {
     // Find the product by its ID and update it
@@ -37,7 +37,8 @@ router.put('/updateProduct/:productId', async (req, res) => {
       title,
       description,
       price,
-      quantity
+      quantity,
+      content
     }, { new: true });
 
     // Check if the product exists
