@@ -14,6 +14,11 @@ const ProductView = () => {
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(""); // Changed from 'products' to 'product'
 
+  const [selectedSize, setSelectedSize] = useState('L');
+  
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+  };
   const [selectedImage, setSelectedImage] = useState(null);
   const [couponCode, setCouponCode] = useState("");
   const [discountApplied, setDiscountApplied] = useState(false);
@@ -52,7 +57,7 @@ const ProductView = () => {
   
   
   const handleAddToCart = () => {
-    dispatch(addToCart(product)); // Dispatch addToCart action with selected product
+    dispatch(addToCart({...product,size:selectedSize})); // Dispatch addToCart action with selected product
   };
   const handleThumbnailClick = (image) => {
     setSelectedImage(image);
@@ -126,7 +131,7 @@ const ProductView = () => {
   
       // Now, proceed with the payment process
   
-      const updatedProduct = { ...product, price: discountedPrice, quantity };
+      const updatedProduct = { ...product,size:selectedSize, price: discountedPrice, quantity };
   
       const updatedProductsArray = [updatedProduct];
   
@@ -249,13 +254,62 @@ const ProductView = () => {
         )}
       </div>
     </div>
+    <div className='mb-4'>
+      {product.category === 'clothes' && (
+        <div>
+          <h2 className='text-xl font-bold mb-2'>Available Sizes:</h2>
+          <div className='flex'>
+            <button
+              className={`bg-gray-300 hover:to-blue-400 text-gray-800 px-4 py-2 rounded mr-2 ${
+                selectedSize === 'S' && 'bg-blue-500 text-white'
+              }`}
+              onClick={() => handleSizeSelect('S')}
+            >
+              S
+            </button>
+            <button
+              className={`bg-gray-300 text-gray-800 hover:to-blue-400 px-4 py-2 rounded mr-2 ${
+                selectedSize === 'M' && 'bg-blue-500 text-white'
+              }`}
+              onClick={() => handleSizeSelect('M')}
+            >
+              M
+            </button>
+            <button
+              className={`bg-gray-300 text-gray-800 hover:to-blue-400 px-4 py-2 rounded mr-2 ${
+                selectedSize === 'L' && 'bg-blue-500 text-white'
+              }`}
+              onClick={() => handleSizeSelect('L')}
+            >
+              L
+            </button>
+            <button
+              className={`bg-gray-300 text-gray-800 hover:to-blue-400 px-4 py-2 rounded mr-2 ${
+                selectedSize === 'XL' && 'bg-blue-500 text-white'
+              }`}
+              onClick={() => handleSizeSelect('XL')}
+            >
+              XL
+            </button>
+            <button
+              className={`bg-gray-300 text-gray-800 px-4 py-2 hover:to-blue-400 rounded mr-2 ${
+                selectedSize === 'XXL' && 'bg-blue-500 text-white'
+              }`}
+              onClick={() => handleSizeSelect('XXL')}
+            >
+              XXL
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
     <div
         className='p-3 max-w-2xl mx-auto w-full '
         dangerouslySetInnerHTML={{ __html: product && product.content }}
       ></div>
-        <div className="mt-4">
+        <div className="mt-5 ">
           <input type="text" value={couponCode} onChange={handleCouponCodeChange} placeholder="Enter coupon code" className="border border-gray-400 rounded px-3 py-2 mr-2" />
-          <button onClick={applyCouponCode} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition duration-300">Apply Coupon</button>
+          <button onClick={applyCouponCode} className="bg-gray-800 text-white px-4 py-2 mt-2 rounded hover:bg-gray-900 transition duration-300">Apply Coupon</button>
           {error && <p className="text-red-600 mt-2">{error}</p>} {/* Display error message */}
         </div>
         {discountApplied && (

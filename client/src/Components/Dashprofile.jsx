@@ -186,12 +186,11 @@ const handleSignout = async()=>{
   <img
     src={imageFileUrl || currentUser.profilepic}
     alt="user"
-    className={`self-center w-full h-full border-4 object-cover border-gray-300 absolute top-0 left-0 transform-translate-x-1/2 transform-translate-y-1/2 ${
-      imageUploadProgress === 100 ? '' : 'opacity-60'
-    }`}
+    className={`self-center w-full h-full border-4 object-cover border-gray-300 absolute top-0 left-0 transform-translate-x-1/2 transform-translate-y-1/2 ${!imageUploadProgress || imageUploadProgress === 100 ? '' : 'opacity-60'}`}
     style={{ zIndex: 0 }}
   />
 </div>
+
 
                 {imageFileUploadError && <Alert color='failure'>{imageFileUploadError}</Alert>}
 

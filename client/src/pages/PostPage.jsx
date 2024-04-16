@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import CallToAction from '../Components/CallToAction';
 import CommentSection from '../Components/CommentSection';
 import PostCard from '../Components/PostCard';
-
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -12,6 +12,8 @@ export default function PostPage() {
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
   const [recentPosts, setRecentPosts] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -52,12 +54,41 @@ export default function PostPage() {
     }
   }, []);
 
+  useEffect(() => {
+    const viewTimer = setTimeout(() => {
+      if (currentUser) {
+        addView();
+      }
+    }, 18000);
+// 3 minutes in milliseconds
+
+    return () => clearTimeout(viewTimer);
+  }, [currentUser, post]);
+
+  const addView = async () => {
+    try {
+      const res = await fetch(`/api/post/addview/${post._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: currentUser._id }),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to add view');
+      }
+    } catch (error) {
+      console.error('Error adding view:', error);
+    }
+  };
+
   if (loading)
     return (
       <div className='flex justify-center items-center min-h-screen'>
         <Spinner size='xl' />
       </div>
     );
+
   return (
     <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
       <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>
@@ -97,7 +128,7 @@ export default function PostPage() {
           {recentPosts &&
             recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
         </div> 
-       </div>
+      </div>
     </main>
-  ); 
+  );
 }

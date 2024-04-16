@@ -17,7 +17,7 @@ const CallToAction = () => {
 
             </p>
             <Button gradientDuoTone='pinkToPurple'>
-                <a href='https://jiocinema.com/' target="_blank" rel="noopener noreferrer" className="rounded-tl-xl rounded-bl-none">
+                <a href='https://jiocinema.com/' target="_blank" rel="noopener noreferrer" className=" rounded-lg border  p-1 border-gray-700 " >
                   India Ka Naya Tyohar
             </a>
               

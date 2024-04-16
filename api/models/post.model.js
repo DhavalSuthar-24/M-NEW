@@ -29,6 +29,15 @@ const postSchema = new mongoose.Schema(
             ref:"User",
             // required:true
         },
+        views:{
+            type:Array,
+            default:[]
+
+        },
+        vCounts:{
+            type:Number,
+            default:0
+        }
         // isAdmin:{
         //     type:Boolean,
         //     default:false

@@ -419,7 +419,7 @@ router.post("/create-checkout-session", async (req, res) => {
     email: userEmail,
     metadata: {
       userId: userId,
-      cart: JSON.stringify(products.map(product => ({ productId: product._id, quantity: product.quantity }))),
+      cart: JSON.stringify(products.map(product => ({ productId: product._id, quantity: product.quantity,Size:product.size }))),
     }
   });
 
@@ -431,8 +431,10 @@ router.post("/create-checkout-session", async (req, res) => {
         product_data: {
           name: product.title,
           images: [product.image],
+      
           metadata: {
-            id: product._id
+            id: product._id,
+            Size:product.size
           }
         },
         unit_amount: product.price * 100,

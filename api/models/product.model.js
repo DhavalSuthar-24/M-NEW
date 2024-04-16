@@ -44,7 +44,11 @@ const productSchema = new mongoose.Schema(
         price:{
             type:Number,
             default:333
-        },
+        },size:{
+            type:String,
+            default:'x'    
+            
+        }
 
         // isAdmin:{
         //     type:Boolean,

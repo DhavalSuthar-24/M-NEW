@@ -94,6 +94,68 @@ router.get("/:orderId", async (req, res) => {
   }
 });
 
+
+
+
+
+
+router.post('/send-email', async (req, res) => {
+  try {
+    const { email, image, orderId } = req.body;
+
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'dhavalllsuthar@gmail.com', // Update with your Gmail email
+        pass: 'gevc awpo lpnb zket', // Update with your Gmail password
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: 'DkS e-store <DKS@GMAIL.COM>', // Sender's email
+      to: email, // Receiver's email
+      subject: 'Your Order Bill', // Subject of the email
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h1 style="color: #333;">Your Order Bill</h1>
+          <p style="color: #666;">Dear Customer,</p>
+          <p style="color: #666;">Thank you for your order! Please find your order bill attached below:</p>
+          <p style="color: #666;">Order ID: ${orderId}</p>
+      
+        </div>
+      `,
+      attachments: [
+        {
+          filename: `order_${orderId}.png`, // Filename of the attachment
+          content: image.split('base64,')[1], // Extract base64 content from the image data URL
+          encoding: 'base64', // Specify the encoding of the attachment content
+        },
+      ],
+    };
+
+    // Send email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Failed to send email' });
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).json({ message: 'Email sent successfully' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
   router.put("/confirm/:orderId", async (req, res) => {
     try {
       const orderId = req.params.orderId;

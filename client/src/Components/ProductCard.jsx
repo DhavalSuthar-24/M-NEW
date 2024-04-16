@@ -47,7 +47,7 @@ const ProductCard = ({ product, addToCart }) => {
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-white">
           <h2 className="text-lg font-semibold mb-2">{croppedTitle}</h2>
-          <p className="text-gray-700 font-medium">₹ {product.price}</p>
+          <p className="text-gray-700 font-medium">$ {product.price}</p>
           <button
             onClick={handleAddToCart}
             className="mt-2 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"

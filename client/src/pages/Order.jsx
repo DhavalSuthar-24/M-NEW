@@ -79,10 +79,12 @@ const Order = () => {
                 <div className="flex-grow ml-4">
                   <div className="flex justify-between items-end">
                     <div>
+                      <Link to={`orderDetails/${order._id}`}>
                       <h6 className="text-lg font-bold mb-1">{product.title}</h6>
                       <div>
                         <p>Order Date: {formatDate(order.createdAt)}</p>
                       </div>
+                      </Link>
                     </div>
                     <div className="text-right">
                       {/* Content for right side, if any */}

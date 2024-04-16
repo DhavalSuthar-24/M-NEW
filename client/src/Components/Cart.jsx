@@ -2,7 +2,7 @@ import { FaTimes } from 'react-icons/fa';
 import { loadStripe } from '@stripe/stripe-js';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import {  updateQuantity, removeFromCart,toggleCartVisibility } from '../redux/cart/cartSlice';
+import { updateQuantity, removeFromCart, toggleCartVisibility } from '../redux/cart/cartSlice';
 import { Link } from 'react-router-dom';
 
 
@@ -12,7 +12,7 @@ const Cart = () => {
   const cartVisible = useSelector(state => state.cart.cartVisible);
   const [totalAmount, setTotalAmount] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
-  const toggleVisibility  =()=>{
+  const toggleVisibility = () => {
     dispatch(toggleCartVisibility());
   }
 
@@ -33,10 +33,10 @@ const Cart = () => {
     try {
       const body = {
         products: cartItems, // Array of products in the cart
-        userId:currentUser._id, // User ID of the current user
-        username:currentUser.username, // Username of the current user
+        userId: currentUser._id, // User ID of the current user
+        username: currentUser.username, // Username of the current user
       };
-      
+
 
       const headers = {
         'Content-Type': 'application/json'
@@ -66,12 +66,12 @@ const Cart = () => {
     }
   };
 
-  const handleUpdateQuantity = (itemId, newQuantity) => {
-    dispatch(updateQuantity({ itemId, newQuantity }));
+  const handleUpdateQuantity = (itemId, size, newQuantity) => {
+    dispatch(updateQuantity({ itemId, size, newQuantity }));
   };
 
-  const handleRemoveFromCart = (itemId) => {
-    dispatch(removeFromCart(itemId));
+  const handleRemoveFromCart = (itemId, size) => {
+    dispatch(removeFromCart({ itemId, size }));
   };
 
   return cartVisible ? (
@@ -91,25 +91,29 @@ const Cart = () => {
           <div key={item._id} className="flex items-center border-b py-4">
             <img src={item.image} alt={item.title} className="w-20 h-20 object-cover mr-4" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
-              <p className="text-gray-600">Price: ₹{item.price}</p>
-              <div className="flex items-center mt-2">
+              <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3><div className="flex justify-between">
+                <p className="text-gray-600">Price: ₹{item.price}</p>{item.category === 'clothes' && (
+                  <p className="text-gray-600">Size: <span className='font-semibold'>{item.size}</span></p>)}
+              </div>
+
+
+              <div className="flex items-center mt-2  ">
                 <button
                   className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full mr-2 hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => handleUpdateQuantity(item._id, Math.max(1, (item.quantity || 1) - 1))}
+                  onClick={() => handleUpdateQuantity(item._id, item.size, Math.max(1, (item.quantity || 1) - 1))}
                 >
                   -
                 </button>
                 <span className="px-3 py-1 border text-gray-500">{item.quantity || 0}</span>
                 <button
                   className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full ml-2 hover:bg-gray-300 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => handleUpdateQuantity(item._id, (item.quantity || 0) + 1)}
+                  onClick={() => handleUpdateQuantity(item._id, item.size, (item.quantity || 0) + 1)}
                 >
                   +
                 </button>
                 <button
                   className="bg-red-500 text-white px-3 py-1 rounded-full ml-auto hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  onClick={() => handleRemoveFromCart(item._id)}
+                  onClick={() => handleRemoveFromCart(item._id, item.size)}
                 >
                   Remove
                 </button>
@@ -136,7 +140,5 @@ const Cart = () => {
       </div>
     </div>
   ) : null;
-          }
+}
 export default Cart;
-
-  

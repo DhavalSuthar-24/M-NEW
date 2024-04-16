@@ -11,31 +11,32 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const product = action.payload; 
-      console.log(product)
-      // Extract the product from the payload
-      const existingItem = state.cartItems.find(item => item._id === product._id);
-      if (existingItem) {
-        // If the product is already in the cart, update its quantity
-        existingItem.quantity++;
+      const existingItemIndex = state.cartItems.findIndex(item => item._id === product._id && item.size === product.size);
+      
+      if (existingItemIndex !== -1) {
+        state.cartItems[existingItemIndex].quantity++;
       } else {
-        // If the product is not in the cart, add it with quantity 1
         state.cartItems.push({ ...product, quantity: 1 });
       }
     },
+    
     updateQuantity: (state, action) => {
-      const { itemId, newQuantity } = action.payload;
-      const itemToUpdate = state.cartItems.find(item => item._id === itemId);
+      const { itemId, newQuantity, size } = action.payload;
+      const itemToUpdate = state.cartItems.find(item => item._id === itemId && item.size === size);
       if (itemToUpdate) {
         itemToUpdate.quantity = newQuantity;
       }
     },
+    
     removeFromCart: (state, action) => {
-      const  itemId  = action.payload;
-      state.cartItems = state.cartItems.filter(item => item._id !== itemId);
+      const { itemId, size } = action.payload;
+      state.cartItems = state.cartItems.filter(item => item._id !== itemId || item.size !== size);
     },
+    
     toggleCartVisibility: (state) => {
       state.cartVisible = !state.cartVisible;
     },
+    
     clearCart: (state) => {
       state.cartItems = [];
       state.cartVisible = false;

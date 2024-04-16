@@ -6,36 +6,44 @@ import { FaShoppingCart } from "react-icons/fa";
 import ProductCard from "../Components/ProductCard";
 import Cart from "../Components/Cart";
 
-const Products = () => {
+const Projects = () => {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchedProducts, setSearchedProducts] = useState([]);
   const productsPerPage = 9;
   const cartItems = useSelector(state => state.cart.cartItems);
   const cartVisible = useSelector(state => state.cart.cartVisible);
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/product/getproducts?page=${currentPage}&limit=${productsPerPage}`);
+      const res = await fetch(`/api/product/getproducts?page=${currentPage}&limit=${productsPerPage}&searchTerm=${searchTerm}`);
       if (!res.ok) {
         throw new Error('Failed to fetch products');
       }
       const data = await res.json();
       setProducts(prevProducts => [...prevProducts, ...data.products]);
+      setSearchedProducts(data.products);
       setTotalProducts(data.totalProducts);
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset current page when searching
   };
 
   const handleAddToCart = (product) => {
@@ -59,10 +67,17 @@ const Products = () => {
   };
 
   return (
-    <div className="min-h-screen ">
-      <nav className="p-4 bg-indigo-600 text-white">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link to="/e-store" className="font-bold text-lg">DKS Blog</Link>
+    <div className="min-h-screen">
+      <nav className="p-4 bg-indigo-600 text-white flex justify-between items-center">
+        <Link to="/e-store" className="font-bold text-lg">DKS Blog</Link>
+        <div className="flex items-center">
+          <input
+            type="text"
+            placeholder="Search products"
+            className="px-4 py-2 border border-gray-300 text-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-600 mr-4"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
           <button onClick={handleToggleCartVisibility} className="relative hover:text-indigo-200 transition duration-200 text-2xl focus:outline-none">
             <FaShoppingCart />
             {cartItems.length > 0 && (
@@ -77,7 +92,7 @@ const Products = () => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-indigo-600 mb-8">Our Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {searchedProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -102,12 +117,10 @@ const Products = () => {
       <Cart
         cartItems={cartItems}
         updateQuantity={handleUpdateQuantity}
-        
         removeFromCart={handleRemoveFromCart}
-  
       />
     </div>
   );
 }
 
-export default Products;
+export default Projects;
