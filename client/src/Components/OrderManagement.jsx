@@ -150,10 +150,12 @@ export default function OrderManagement() {
                   <Table.Cell>    <Link to={`/order/orderdetails/${order._id}`}>{new Date(order.orderDate).toLocaleDateString()}</Link></Table.Cell>
                   <Table.Cell>{order.user}</Table.Cell>
                   <Table.Cell>{order.products[0].title}</Table.Cell>
-                  <Table.Cell>{order.deliveryStatus}</Table.Cell>
                   <Table.Cell>{order.products[0].category}</Table.Cell>
                   <Table.Cell>{order.products[0].quantity}</Table.Cell>
                   <Table.Cell>$ {(order.subtotal / 100).toFixed(2)}</Table.Cell>
+                  <Table.Cell>{order.deliveryStatus}</Table.Cell>
+                
+                 
                   <Table.Cell className={order.orderConfirmation ? 'font-semibold' : ''}>{order.orderConfirmation ? 'Confirmed' : 'Pending'}</Table.Cell>
                   <Table.Cell><Button onClick={() => { handleManageOrder(order._id) }}>Manage Order</Button></Table.Cell>
                 </Table.Row>

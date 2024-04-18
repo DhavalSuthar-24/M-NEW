@@ -17,7 +17,7 @@ const ProductCard = ({ product, addToCart }) => {
   };
 
   const croppedTitle =
-    product.title && product.title.length > 15
+    product.title && product.title.length > 20
       ? product.title.slice(0, 15) + "..."
       : product.title;
 
@@ -46,7 +46,7 @@ const ProductCard = ({ product, addToCart }) => {
           </Link>
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-white">
-          <h2 className="text-lg font-semibold mb-2">{croppedTitle}</h2>
+          <h2 className="text-lg font-normal mb-2 line-clamp-2">{croppedTitle}</h2>
           <p className="text-gray-700 font-medium">$ {product.price}</p>
           <button
             onClick={handleAddToCart}

@@ -9,6 +9,7 @@ import productRoute from "./routes/product.route.js";
 import stripeRoute from "./routes/stripe.route.js";
 import coupenRoute from "./routes/coupon.route.js";
 import orderRoute from "./routes/order.route.js";
+import niftyRoute from "./routes/nifty.route.js";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import path from 'path';
@@ -41,7 +42,8 @@ app.use("/api/comment", commentRoute);
 app.use("/api/product",productRoute);
 app.use('/api/stripe',stripeRoute);
 app.use('/api/coupon',coupenRoute);
-app.use('/api/order',orderRoute)
+app.use('/api/order',orderRoute);
+app.use('/api/market',niftyRoute)
 app.get('*',(req,res)=>{
     res.sendFile(path.join(__dirname, 'client','dist','index.html'));
 

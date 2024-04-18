@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/cart/cartSlice';
+import ReviewSection from "./ReviewSection";
 
 
 
@@ -180,7 +181,7 @@ const ProductView = () => {
     return <div>Loading...</div>;
   }
 
-  return (
+  return (<>
     <div className="flex flex-col md:flex-row items-start md:items-center">
      <div className="w-full md:w-1/2 p-4 flex justify-center items-center h-full">
   <img 
@@ -255,54 +256,55 @@ const ProductView = () => {
       </div>
     </div>
     <div className='mb-4'>
-      {product.category === 'clothes' && (
-        <div>
-          <h2 className='text-xl font-bold mb-2'>Available Sizes:</h2>
-          <div className='flex'>
-            <button
-              className={`bg-gray-300 hover:to-blue-400 text-gray-800 px-4 py-2 rounded mr-2 ${
-                selectedSize === 'S' && 'bg-blue-500 text-white'
-              }`}
-              onClick={() => handleSizeSelect('S')}
-            >
-              S
-            </button>
-            <button
-              className={`bg-gray-300 text-gray-800 hover:to-blue-400 px-4 py-2 rounded mr-2 ${
-                selectedSize === 'M' && 'bg-blue-500 text-white'
-              }`}
-              onClick={() => handleSizeSelect('M')}
-            >
-              M
-            </button>
-            <button
-              className={`bg-gray-300 text-gray-800 hover:to-blue-400 px-4 py-2 rounded mr-2 ${
-                selectedSize === 'L' && 'bg-blue-500 text-white'
-              }`}
-              onClick={() => handleSizeSelect('L')}
-            >
-              L
-            </button>
-            <button
-              className={`bg-gray-300 text-gray-800 hover:to-blue-400 px-4 py-2 rounded mr-2 ${
-                selectedSize === 'XL' && 'bg-blue-500 text-white'
-              }`}
-              onClick={() => handleSizeSelect('XL')}
-            >
-              XL
-            </button>
-            <button
-              className={`bg-gray-300 text-gray-800 px-4 py-2 hover:to-blue-400 rounded mr-2 ${
-                selectedSize === 'XXL' && 'bg-blue-500 text-white'
-              }`}
-              onClick={() => handleSizeSelect('XXL')}
-            >
-              XXL
-            </button>
-          </div>
-        </div>
-      )}
+  {product.category === 'clothes' && (
+    <div>
+      <h2 className='text-xl font-bold mb-2'>Available Sizes:</h2>
+      <div className='flex'>
+        <button
+          className={`bg-purple-300 hover:bg-purple-400 text-gray-800 px-4 py-2 rounded mr-2 ${
+            selectedSize === 'S' ? 'bg-purple-500 text-white' : ''
+          }`}
+          onClick={() => handleSizeSelect('S')}
+        >
+          S
+        </button>
+        <button
+          className={`bg-purple-300 hover:bg-purple-400 text-gray-800 px-4 py-2 rounded mr-2 ${
+            selectedSize === 'M' ? 'bg-purple-500 text-white' : ''
+          }`}
+          onClick={() => handleSizeSelect('M')}
+        >
+          M
+        </button>
+        <button
+          className={`bg-purple-300 hover:bg-purple-400 text-gray-800 px-4 py-2 rounded mr-2 ${
+            selectedSize === 'L' ? 'bg-purple-500 text-white' : ''
+          }`}
+          onClick={() => handleSizeSelect('L')}
+        >
+          L
+        </button>
+        <button
+          className={`bg-purple-300 hover:bg-purple-400 text-gray-800 px-4 py-2 rounded mr-2 ${
+            selectedSize === 'XL' ? 'bg-purple-500 text-white' : ''
+          }`}
+          onClick={() => handleSizeSelect('XL')}
+        >
+          XL
+        </button>
+        <button
+          className={`bg-purple-300 hover:bg-purple-400 text-gray-800 px-4 py-2 rounded mr-2 ${
+            selectedSize === 'XXL' ? 'bg-purple-500 text-white' : ''
+          }`}
+          onClick={() => handleSizeSelect('XXL')}
+        >
+          XXL
+        </button>
+      </div>
     </div>
+  )}
+</div>
+
     <div
         className='p-3 max-w-2xl mx-auto w-full '
         dangerouslySetInnerHTML={{ __html: product && product.content }}
@@ -315,8 +317,13 @@ const ProductView = () => {
         {discountApplied && (
           <p className="text-green-600 mt-2">Discount applied successfully!</p>
         )}
+
+
       </div>
+ 
     </div>
+    <ReviewSection id={id}/>
+    </>
   );
 };
 

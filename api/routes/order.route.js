@@ -45,7 +45,7 @@ router.get("/getOrdersDetails", async (req, res) => {
                 products: order.products.map(product => {
                     return {
                         quantity: product.quantity,
-                        title: product.productId.title,
+                        title: product.productId.title ,
                         image: product.productId.image,
                         price: product.productId.price,
                         category: product.productId.category
