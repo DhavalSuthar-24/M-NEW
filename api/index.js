@@ -56,7 +56,7 @@ app.use((err, req, res, next) => {
 });
 
 
-mongoose.connect(process.env.MONGOURI || 'mongodb+srv://dhavalll63:dks123@cluster0.c8vw6id.mongodb.net/project' ).then(() => {
+mongoose.connect(process.env.MONGOURI  ).then(() => {
     console.log("Connected to database");
 
 }).catch((err) => {
